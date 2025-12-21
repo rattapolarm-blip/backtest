@@ -3,223 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backtest Pro (SMC)</title>
-
+<title>Backtest Final Pro+ (Mindset)</title>
 <style>
-body{
-  background:#0b0b0b;
-  color:#eaeaea;
-  font-family:Arial, sans-serif;
-  margin:0;
-  padding:14px;
-}
-h1{color:#3cff5a}
-label{font-weight:bold}
-select{
-  width:100%;
-  padding:10px;
-  margin:6px 0 12px;
-  font-size:16px;
-}
-.checkbox-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-.checkbox-grid label{
-  background:#151515;
-  padding:8px;
-  border-radius:6px;
-}
-button{
-  width:100%;
-  padding:14px;
-  font-size:18px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-.btn-save{background:#3cb54a;color:#fff}
-.btn-clear{background:#e74c3c;color:#fff;margin-top:20px}
-.section{
-  margin-top:20px;
-  padding:12px;
-  border:1px solid #222;
-  border-radius:6px
-}
+body{background:#0b0b0b;color:#eee;font-family:Arial;padding:14px}
+h1{color:#3cff9a}
+section{border:1px solid #222;padding:12px;margin-top:16px;border-radius:8px}
+label{display:block;margin:6px 0}
+select,input[type=checkbox]{margin-right:6px}
+button{width:100%;padding:14px;font-size:18px;border:none;border-radius:6px;margin-top:12px}
+.save{background:#32c96a;color:#000}
+.clear{background:#e74c3c;color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.small{font-size:14px;color:#aaa}
 table{width:100%;border-collapse:collapse;margin-top:10px}
-td,th{border:1px solid #333;padding:6px;text-align:center}
-.green{color:#3cff5a}
+th,td{border:1px solid #222;padding:6px;text-align:center}
+th{background:#111}
 </style>
 </head>
 
 <body>
+<h1>📊 Backtest Final Pro+ (Mindset)</h1>
 
-<h1>📊 Backtest Pro (SMC)</h1>
-
-<label>Session</label>
+<section>
+<h3>🕒 Session / Grade</h3>
 <select id="session">
-<option>Asia</option>
-<option>London</option>
-<option>NY</option>
+<option>Asia</option><option>London</option><option>NY</option>
 </select>
 
-<label>Grade</label>
 <select id="grade">
-<option>A+</option>
-<option>A</option>
-<option>B+</option>
-<option>B</option>
-<option>C</option>
+<option>A+</option><option>A</option><option>B+</option><option>B</option><option>C</option>
 </select>
 
-<label>ผลลัพธ์</label>
 <select id="result">
-<option>Win</option>
-<option>Loss</option>
+<option>Win</option><option>Loss</option>
 </select>
+</section>
 
-<label>STO M5</label>
-<select id="stoM5">
-<option>OVS</option>
-<option>OVB</option>
-<option>ไม่ตรง</option>
-</select>
+<section>
+<h3>📈 Indicator</h3>
+<label>STO M5
+<select id="stoM5"><option>OVS</option><option>OVB</option><option>-</option></select>
+</label>
+<label>STO M15
+<select id="stoM15"><option>OVS</option><option>OVB</option><option>-</option></select>
+</label>
+</section>
 
-<label>STO M15</label>
-<select id="stoM15">
-<option>OVS</option>
-<option>OVB</option>
-<option>ไม่ตรง</option>
-</select>
-
-<div class="section">
-<b>📐 Structure (ตามวิชา)</b>
-<div class="checkbox-grid">
-<label><input type="checkbox" value="Sweep"> Sweep</label>
-<label><input type="checkbox" value="BOS"> BOS</label>
-<label><input type="checkbox" value="HL"> Higher Low (HL)</label>
-<label><input type="checkbox" value="LH"> Lower High (LH)</label>
-<label><input type="checkbox" value="Trendline"> Trendline</label>
+<section>
+<h3>🏗 Structure / Zone</h3>
+<div class="grid">
+<label><input type="checkbox" value="Sweep">Sweep</label>
+<label><input type="checkbox" value="BOS">BOS</label>
+<label><input type="checkbox" value="HL">Higher Low (HL)</label>
+<label><input type="checkbox" value="LH">Lower High (LH)</label>
+<label><input type="checkbox" value="Premium">Premium</label>
+<label><input type="checkbox" value="Discount">Discount</label>
 </div>
-</div>
+</section>
 
-<div class="section">
-<b>📊 Zone</b>
-<div class="checkbox-grid">
-<label><input type="checkbox" value="Premium"> Premium</label>
-<label><input type="checkbox" value="Discount"> Discount</label>
+<section>
+<h3>📉 Trend / Risk</h3>
+<div class="grid">
+<label><input type="checkbox" value="EMA_M15">EMA200 เทรนเดียว M15</label>
+<label><input type="checkbox" value="EMA_H1">EMA200 เทรนเดียว H1</label>
+<label><input type="checkbox" value="RR_OK">RR คุ้ม</label>
+<label><input type="checkbox" value="Near_Supply">ใกล้ Supply / EMA ใหญ่ ❌</label>
 </div>
-</div>
+</section>
 
-<div class="section">
-<b>📈 Trend / EMA</b>
-<div class="checkbox-grid">
-<label><input type="checkbox" value="EMA_M5"> EMA200 เทรนเดียว M5</label>
-<label><input type="checkbox" value="EMA_H1"> EMA200 เทรนเดียว H1</label>
-<label><input type="checkbox" value="EMA_Hit"> ชน EMA ใหญ่ ❌</label>
+<section>
+<h3>🧠 จิตใจ / วินัย</h3>
+<div class="grid">
+<label><input type="checkbox" value="Calm">ใจนิ่ง ไม่รีบ</label>
+<label><input type="checkbox" value="Follow_Plan">ทำตามแผน</label>
+<label><input type="checkbox" value="FOMO">FOMO ❌</label>
+<label><input type="checkbox" value="Revenge">Revenge Trade ❌</label>
 </div>
-</div>
+</section>
 
-<div class="section">
-<b>💰 RR / Risk</b>
-<div class="checkbox-grid">
-<label><input type="checkbox" value="RR_OK"> RR คุ้ม</label>
-<label><input type="checkbox" value="Near_Supply"> ใกล้ Supply / EMA ใหญ่ ❌</label>
-</div>
-</div>
+<button class="save" onclick="saveTrade()">บันทึกไม้</button>
 
-<button class="btn-save" onclick="saveTrade()">บันทึกไม้</button>
+<section>
+<h3>📊 สรุปรวม</h3>
+<div id="summary"></div>
+</section>
 
-<div class="section" id="summary"></div>
-<div class="section" id="topcombo"></div>
-<div class="section" id="sessiongrade"></div>
+<section>
+<h3>🔥 Top 5 Combo</h3>
+<table id="comboTable">
+<tr><th>Combo</th><th>WinRate</th></tr>
+</table>
+</section>
 
-<button class="btn-clear" onclick="clearAll()">🗑️ ล้างข้อมูลทั้งหมด</button>
+<section>
+<h3>📌 Session × Grade</h3>
+<table id="sgTable">
+<tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>
+</table>
+</section>
+
+<button class="clear" onclick="clearAll()">🗑 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="BACKTEST_SMC_PRO";
-
-function getData(){
-  return JSON.parse(localStorage.getItem(KEY) || "[]");
-}
-function saveData(d){
-  localStorage.setItem(KEY,JSON.stringify(d));
-}
+let trades = JSON.parse(localStorage.getItem("trades")||"[]");
 
 function saveTrade(){
-  const checks=[...document.querySelectorAll("input[type=checkbox]:checked")]
-    .map(c=>c.value);
-  const data=getData();
-  data.push({
-    time:new Date().toISOString(),
+  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
+  trades.push({
     session:session.value,
     grade:grade.value,
     result:result.value,
     stoM5:stoM5.value,
     stoM15:stoM15.value,
-    combo:checks
+    tags,
+    date:new Date().toISOString()
   });
-  saveData(data);
+  localStorage.setItem("trades",JSON.stringify(trades));
   render();
 }
 
 function render(){
-  const data=getData();
-  let win=data.filter(d=>d.result==="Win").length;
-  let loss=data.filter(d=>d.result==="Loss").length;
+  const win=trades.filter(t=>t.result==="Win").length;
+  const loss=trades.filter(t=>t.result==="Loss").length;
+  const wr=trades.length?((win/trades.length)*100).toFixed(1):0;
+  summary.innerHTML=`Win: ${win} | Loss: ${loss} | WinRate: ${wr}%`;
 
-  summary.innerHTML=
-  `<h3 class="green">สรุปรวม</h3>
-   Win: ${win} | Loss: ${loss} | WinRate: ${
-     data.length?((win/data.length)*100).toFixed(1):0
-   }%`;
-
-  // Top Combo
-  let map={};
-  data.forEach(d=>{
-    if(!d.combo.length)return;
-    let k=d.combo.sort().join("+");
-    if(!map[k])map[k]={w:0,t:0};
-    map[k].t++;
-    if(d.result==="Win")map[k].w++;
+  // Combo
+  const comboMap={};
+  trades.forEach(t=>{
+    const k=t.tags.sort().join("+");
+    if(!comboMap[k]) comboMap[k]={w:0,l:0};
+    t.result==="Win"?comboMap[k].w++:comboMap[k].l++;
   });
-  let top=Object.entries(map)
-    .map(([k,v])=>({k,wr:(v.w/v.t)*100}))
-    .sort((a,b)=>b.wr-a.wr)
-    .slice(0,5);
+  comboTable.innerHTML="<tr><th>Combo</th><th>WinRate</th></tr>";
+  Object.entries(comboMap)
+    .map(([k,v])=>({k,wr:(v.w/(v.w+v.l))*100||0}))
+    .sort((a,b)=>b.wr-a.wr).slice(0,5)
+    .forEach(r=>{
+      comboTable.innerHTML+=`<tr><td>${r.k}</td><td>${r.wr.toFixed(1)}%</td></tr>`;
+    });
 
-  topcombo.innerHTML=
-  "<h3>🔥 Top 5 Combo</h3><table><tr><th>Combo</th><th>WinRate</th></tr>"+
-  top.map(t=>`<tr><td>${t.k}</td><td>${t.wr.toFixed(1)}%</td></tr>`).join("")+
-  "</table>";
-
-  // Session x Grade
-  let sg={};
-  data.forEach(d=>{
-    let k=d.session+"|"+d.grade;
-    if(!sg[k])sg[k]={w:0,t:0};
-    sg[k].t++;
-    if(d.result==="Win")sg[k].w++;
+  // Session × Grade
+  const sg={};
+  trades.forEach(t=>{
+    const k=t.session+"_"+t.grade;
+    if(!sg[k]) sg[k]={w:0,l:0};
+    t.result==="Win"?sg[k].w++:sg[k].l++;
   });
-  sessiongrade.innerHTML=
-  "<h3>🔀 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>"+
-  Object.entries(sg).map(([k,v])=>{
-    let [s,g]=k.split("|");
-    return `<tr><td>${s}</td><td>${g}</td><td>${((v.w/v.t)*100).toFixed(1)}%</td></tr>`;
-  }).join("")+
-  "</table>";
+  sgTable.innerHTML="<tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
+  Object.entries(sg).forEach(([k,v])=>{
+    const [s,g]=k.split("_");
+    const wr=((v.w/(v.w+v.l))*100)||0;
+    sgTable.innerHTML+=`<tr><td>${s}</td><td>${g}</td><td>${wr.toFixed(1)}%</td></tr>`;
+  });
 }
 
 function clearAll(){
   if(confirm("ล้างข้อมูลทั้งหมด?")){
-    localStorage.removeItem(KEY);
+    localStorage.removeItem("trades");
+    trades=[];
     render();
   }
 }
+
 render();
 </script>
-
 </body>
 </html>
-
