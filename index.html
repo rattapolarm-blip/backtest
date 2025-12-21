@@ -1,116 +1,54 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Backtest Playbook (FINAL PRO)</title>
-
+<title>Backtest Playbook FULL</title>
 <style>
-body{
-  background:#0b0b0b;
-  color:#eaeaea;
-  font-family:Arial, sans-serif;
-  margin:0;
-  padding:12px;
-}
+body{background:#0b0b0b;color:#eee;font-family:Arial;padding:14px}
 h1{color:#4cff4c}
-section{
-  border:1px solid #222;
-  padding:12px;
-  margin-top:14px;
-  border-radius:8px;
-}
-label{display:block;margin:6px 0}
-select,button{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  font-size:16px;
-}
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
+section{border:1px solid #222;padding:12px;margin:16px 0;border-radius:8px}
+select,button{width:100%;padding:10px;margin-top:6px;font-size:16px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #333;padding:6px;text-align:center}
+th{background:#111}
 .ok{color:#4cff4c}
 .bad{color:#ff4c4c}
 button.save{background:#2ecc71;color:#000;font-weight:bold}
 button.clear{background:#e74c3c;color:#fff;font-weight:bold;margin-top:12px}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-}
-th,td{
-  border:1px solid #333;
-  padding:6px;
-  text-align:center;
-}
-th{background:#111}
 </style>
 </head>
 
 <body>
 
-<h1>📘 Backtest Playbook (FINAL PRO)</h1>
+<h1>📘 Backtest Playbook (FULL)</h1>
 
+<!-- ====================== INPUT ====================== -->
 <section>
 <h3>Session / Grade / Result</h3>
-<select id="session">
-  <option>Asia</option>
-  <option>London</option>
-  <option>New York</option>
-</select>
-
-<select id="grade">
-  <option>A+</option>
-  <option>A</option>
-  <option>B+</option>
-  <option>B</option>
-  <option>C</option>
-</select>
-
-<select id="result">
-  <option>Win</option>
-  <option>Loss</option>
-</select>
+<select id="session"><option>Asia</option><option>London</option><option>New York</option></select>
+<select id="grade"><option>A+</option><option>A</option><option>B+</option><option>B</option><option>C</option></select>
+<select id="result"><option>Win</option><option>Loss</option></select>
 </section>
 
 <section>
 <h3>📊 STO</h3>
 <div class="grid">
-  <label>STO M5
-    <select id="stoM5">
-      <option>None</option>
-      <option>OVB</option>
-      <option>OVS</option>
-    </select>
-  </label>
-  <label>STO M15
-    <select id="stoM15">
-      <option>None</option>
-      <option>OVB</option>
-      <option>OVS</option>
-    </select>
-  </label>
+<label>STO M5<select id="stoM5"><option>None</option><option>OVB</option><option>OVS</option></select></label>
+<label>STO M15<select id="stoM15"><option>None</option><option>OVB</option><option>OVS</option></select></label>
 </div>
 </section>
 
 <section>
-<h3>💧 Liquidity</h3>
+<h3>🏗 Structure / Zone</h3>
 <div class="grid">
 <label><input type="checkbox" value="EQH"> Equal High</label>
 <label><input type="checkbox" value="EQL"> Equal Low</label>
 <label><input type="checkbox" value="AsiaH"> Asia High</label>
 <label><input type="checkbox" value="AsiaL"> Asia Low</label>
-<label><input type="checkbox" value="PDH"> Previous Day High</label>
-<label><input type="checkbox" value="PDL"> Previous Day Low</label>
-</div>
-</section>
-
-<section>
-<h3>🏗 Structure</h3>
-<div class="grid">
+<label><input type="checkbox" value="PDH"> Prev Day High</label>
+<label><input type="checkbox" value="PDL"> Prev Day Low</label>
 <label><input type="checkbox" value="HH"> Higher High</label>
 <label><input type="checkbox" value="HL"> Higher Low</label>
 <label><input type="checkbox" value="LH"> Lower High</label>
@@ -135,25 +73,26 @@ th{background:#111}
 <section>
 <h3>📈 Trend / Risk</h3>
 <div class="grid">
-<label><input type="checkbox" value="EMA_M15"> EMA200 เทรนเดียว M15</label>
-<label><input type="checkbox" value="EMA_H1"> EMA200 เทรนเดียว H1</label>
+<label><input type="checkbox" value="EMA_M15"> EMA200 เทรน M15</label>
+<label><input type="checkbox" value="EMA_H1"> EMA200 เทรน H1</label>
 <label><input type="checkbox" value="RR_OK"> RR คุ้ม</label>
-<label><input type="checkbox" value="Near_Supply"> ใกล้ Supply / EMA ใหญ่ ❌</label>
+<label><input type="checkbox" value="Near_Supply"> ใกล้ Supply/EMA ใหญ่ ❌</label>
 </div>
 </section>
 
 <section>
-<h3>🧠 จิตใจ</h3>
+<h3>🧠 Mindset</h3>
 <div class="grid">
 <label><input type="checkbox" value="Calm"> ใจนิ่ง</label>
 <label><input type="checkbox" value="FollowPlan"> ทำตามแผน</label>
 <label><input type="checkbox" value="FOMO"> FOMO ❌</label>
-<label><input type="checkbox" value="Revenge"> Revenge Trade ❌</label>
+<label><input type="checkbox" value="Revenge"> Revenge ❌</label>
 </div>
 </section>
 
 <button class="save" onclick="saveTrade()">บันทึกไม้</button>
 
+<!-- ====================== SUMMARY ====================== -->
 <section>
 <h3>📊 สรุปรวม</h3>
 <div id="summary"></div>
@@ -173,25 +112,51 @@ th{background:#111}
 </table>
 </section>
 
+<!-- ================= LOSS STREAK ================= -->
+<section>
+<h2 style="color:#ff5252">📉 วันแพ้ติดกัน (Losing Streak)</h2>
+<table id="lossStreakTable">
+<tr><th>วันที่</th><th>แพ้ติด</th><th>จำนวนไม้</th><th>สถานะ</th></tr>
+</table>
+</section>
+
+<!-- =============== WEEKDAY HEATMAP =============== -->
+<section>
+<h2 style="color:#ffb74d">📊 Heatmap วันในสัปดาห์</h2>
+<table id="weekdayHeatmap">
+<tr><th>วัน</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>
+</table>
+</section>
+
 <button class="clear" onclick="clearAll()">🗑 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="FINAL_PLAYBOOK_V1";
+const KEY="PLAYBOOK_FULL_V2";
 
-function load(){
-  return JSON.parse(localStorage.getItem(KEY)||"[]");
-}
-function save(data){
-  localStorage.setItem(KEY,JSON.stringify(data));
+function load(){return JSON.parse(localStorage.getItem(KEY)||"[]");}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d));}
+
+function getDateInfo(){
+  const d=new Date();
+  const yyyy=d.getFullYear();
+  const mm=String(d.getMonth()+1).padStart(2,'0');
+  const dd=String(d.getDate()).padStart(2,'0');
+  const temp=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));
+  const day=temp.getUTCDay()||7;
+  temp.setUTCDate(temp.getUTCDate()+4-day);
+  const yearStart=new Date(Date.UTC(temp.getFullYear(),0,1));
+  const week=String(Math.ceil((((temp-yearStart)/86400000)+1)/7)).padStart(2,'0');
+  return {date:`${yyyy}-${mm}-${dd}`, week:`${yyyy}-W${week}`, month:`${yyyy}-${mm}`};
 }
 
 function saveTrade(){
   const data=load();
   const checks=[...document.querySelectorAll("input[type=checkbox]:checked")].map(c=>c.value);
+  const info=getDateInfo();
   data.push({
-    date:new Date().toISOString().slice(0,10),
-    week:new Date().getWeek(),
-    month:new Date().getMonth()+1,
+    date:info.date,
+    week:info.week,
+    month:info.month,
     session:session.value,
     grade:grade.value,
     result:result.value,
@@ -200,24 +165,18 @@ function saveTrade(){
     combo:checks.sort().join("+")
   });
   save(data);
-  render();
+  renderAll();
 }
 
-Date.prototype.getWeek=function(){
-  const d=new Date(Date.UTC(this.getFullYear(),this.getMonth(),this.getDate()));
-  const day=d.getUTCDay()||7;
-  d.setUTCDate(d.getUTCDate()+4-day);
-  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
-  return Math.ceil((((d-yearStart)/86400000)+1)/7);
+// ========= SUMMARY / COMBO / SESSION-GRADE ==========
+
+function renderSummary(d){
+  const w=d.filter(x=>x.result=="Win").length;
+  const l=d.length-w;
+  summary.innerHTML=`Win: ${w} | Loss: ${l} | WinRate: ${(w/(d.length||1)*100).toFixed(1)}%`;
 }
 
-function render(){
-  const d=load();
-  const win=d.filter(x=>x.result=="Win").length;
-  const loss=d.length-win;
-  summary.innerHTML=`Win: ${win} | Loss: ${loss} | WinRate: ${(win/d.length*100||0).toFixed(1)}%`;
-
-  // combo
+function renderCombo(d){
   comboTable.innerHTML="<tr><th>Combo</th><th>WinRate</th></tr>";
   const map={};
   d.forEach(x=>{
@@ -225,14 +184,13 @@ function render(){
     map[x.combo].t++;
     if(x.result=="Win") map[x.combo].w++;
   });
-  Object.entries(map)
-   .sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)
-   .slice(0,5)
-   .forEach(([c,v])=>{
-    comboTable.innerHTML+=`<tr><td>${c}</td><td>${(v.w/v.t*100).toFixed(1)}%</td></tr>`;
-   });
+  Object.entries(map).sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t).slice(0,5)
+  .forEach(([k,v])=>{
+    comboTable.innerHTML+=`<tr><td>${k}</td><td>${(v.w/v.t*100).toFixed(1)}%</td></tr>`;
+  });
+}
 
-  // session x grade
+function renderSG(d){
   sgTable.innerHTML="<tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
   const sg={};
   d.forEach(x=>{
@@ -247,14 +205,95 @@ function render(){
   });
 }
 
+// ========= LOSING STREAK ==========
+
+function getLosingStreakByDay(trades, minLoss=2){
+  const map={};
+  trades.forEach(t=>{
+    if(!map[t.date]) map[t.date]=[];
+    map[t.date].push(t.result);
+  });
+  const out=[];
+  Object.entries(map).forEach(([date,arr])=>{
+    let st=0,max=0;
+    arr.forEach(r=>{r=="Loss"?st++:(st=0);max=Math.max(max,st)});
+    if(max>=minLoss) out.push({date,lossStreak:max,total:arr.length});
+  });
+  return out.sort((a,b)=>b.lossStreak-a.lossStreak);
+}
+
+function renderLosing(trades){
+  const data=getLosingStreakByDay(trades,2);
+  lossStreakTable.innerHTML="<tr><th>วันที่</th><th>แพ้ติด</th><th>ไม้ทั้งหมด</th><th>สถานะ</th></tr>";
+  if(data.length==0){lossStreakTable.innerHTML+=`<tr><td colspan="4">ไม่มีแพ้ติดวันนี้</td></tr>`;return;}
+  data.forEach(d=>{
+    let status="⚠️ ระวัง";
+    if(d.lossStreak>=4) status="🚫 งดเทรดทั้งวัน";
+    else if(d.lossStreak==3) status="⚠️ ลดไม้";
+    lossStreakTable.innerHTML+=`
+      <tr>
+      <td>${d.date}</td>
+      <td>${d.lossStreak}</td>
+      <td>${d.total}</td>
+      <td>${status}</td>
+      </tr>`;
+  });
+}
+
+// ========= HEATMAP =========
+
+function getWeekdayHeatmap(trades){
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const map={};
+  days.forEach(d=>map[d]={win:0,loss:0});
+  trades.forEach(t=>{
+    const day=days[new Date(t.date).getDay()];
+    t.result=="Win"?map[day].win++:map[day].loss++;
+  });
+  return days.map(d=>{
+    const {win,loss}=map[d];
+    const total=win+loss;
+    return {day:d,win,loss,winRate:total?(win/total*100):0};
+  });
+}
+
+function renderHeatmap(trades){
+  weekdayHeatmap.innerHTML="<tr><th>วัน</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>";
+  getWeekdayHeatmap(trades).forEach(d=>{
+    let bg="#1b1b1b";
+    if(d.winRate>=60) bg="#1b5e20";
+    else if(d.winRate>=45) bg="#33691e";
+    else if(d.winRate>=30) bg="#f57f17";
+    else if(d.win+d.loss>0) bg="#b71c1c";
+    weekdayHeatmap.innerHTML+=`
+      <tr style="background:${bg}">
+      <td>${d.day}</td>
+      <td>${d.win}</td>
+      <td>${d.loss}</td>
+      <td>${d.winRate.toFixed(1)}%</td>    
+      </tr>`;
+  });
+}
+
+// ======= MASTER RENDER =======
+
+function renderAll(){
+  const d=load();
+  renderSummary(d);
+  renderCombo(d);
+  renderSG(d);
+  renderLosing(d);
+  renderHeatmap(d);
+}
+
 function clearAll(){
   if(confirm("ล้างข้อมูลทั้งหมด?")){
     localStorage.removeItem(KEY);
-    render();
+    renderAll();
   }
 }
 
-render();
+renderAll();
 </script>
 
 </body>
