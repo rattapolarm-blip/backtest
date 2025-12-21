@@ -1,64 +1,134 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backtest Playbook Pro</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Backtest Playbook (FINAL PRO)</title>
+
 <style>
-body{background:#0b0b0b;color:#eee;font-family:Arial;padding:12px}
+body{
+  background:#0b0b0b;
+  color:#eaeaea;
+  font-family:Arial, sans-serif;
+  margin:0;
+  padding:12px;
+}
 h1{color:#4cff4c}
-section{border:1px solid #222;padding:12px;margin-top:16px;border-radius:8px}
-select,button{width:100%;padding:10px;margin-top:6px;font-size:16px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-label{background:#151515;padding:8px;border-radius:6px}
-button{background:#33cc66;color:#000;font-weight:bold;border:none}
-.red{background:#e74c3c;color:#fff}
-table{width:100%;margin-top:10px;border-collapse:collapse}
-td,th{border:1px solid #333;padding:6px;text-align:center}
-.small{font-size:13px;color:#aaa}
+section{
+  border:1px solid #222;
+  padding:12px;
+  margin-top:14px;
+  border-radius:8px;
+}
+label{display:block;margin:6px 0}
+select,button{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  font-size:16px;
+}
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.ok{color:#4cff4c}
+.bad{color:#ff4c4c}
+button.save{background:#2ecc71;color:#000;font-weight:bold}
+button.clear{background:#e74c3c;color:#fff;font-weight:bold;margin-top:12px}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+}
+th,td{
+  border:1px solid #333;
+  padding:6px;
+  text-align:center;
+}
+th{background:#111}
 </style>
 </head>
 
 <body>
-<h1>📘 Backtest Playbook (Pro)</h1>
+
+<h1>📘 Backtest Playbook (FINAL PRO)</h1>
 
 <section>
-<b>Session</b>
+<h3>Session / Grade / Result</h3>
 <select id="session">
-<option>Asia</option><option>London</option><option>NY</option>
+  <option>Asia</option>
+  <option>London</option>
+  <option>New York</option>
 </select>
 
-<b>Grade</b>
 <select id="grade">
-<option>A+</option><option>A</option><option>B+</option><option>B</option><option>C</option>
+  <option>A+</option>
+  <option>A</option>
+  <option>B+</option>
+  <option>B</option>
+  <option>C</option>
 </select>
 
-<b>Result</b>
 <select id="result">
-<option>Win</option><option>Loss</option>
+  <option>Win</option>
+  <option>Loss</option>
 </select>
 </section>
 
 <section>
 <h3>📊 STO</h3>
-<select id="stoM5"><option>OVS</option><option>OVB</option><option>Mid</option></select>
-<select id="stoM15"><option>OVS</option><option>OVB</option><option>Mid</option></select>
+<div class="grid">
+  <label>STO M5
+    <select id="stoM5">
+      <option>None</option>
+      <option>OVB</option>
+      <option>OVS</option>
+    </select>
+  </label>
+  <label>STO M15
+    <select id="stoM15">
+      <option>None</option>
+      <option>OVB</option>
+      <option>OVS</option>
+    </select>
+  </label>
+</div>
 </section>
 
 <section>
-<h3>🏗 Structure / Zone</h3>
+<h3>💧 Liquidity</h3>
 <div class="grid">
-<label><input type="checkbox" value="Sweep"> Sweep</label>
-<label><input type="checkbox" value="BOS"> BOS</label>
+<label><input type="checkbox" value="EQH"> Equal High</label>
+<label><input type="checkbox" value="EQL"> Equal Low</label>
+<label><input type="checkbox" value="AsiaH"> Asia High</label>
+<label><input type="checkbox" value="AsiaL"> Asia Low</label>
+<label><input type="checkbox" value="PDH"> Previous Day High</label>
+<label><input type="checkbox" value="PDL"> Previous Day Low</label>
+</div>
+</section>
+
+<section>
+<h3>🏗 Structure</h3>
+<div class="grid">
+<label><input type="checkbox" value="HH"> Higher High</label>
 <label><input type="checkbox" value="HL"> Higher Low</label>
 <label><input type="checkbox" value="LH"> Lower High</label>
+<label><input type="checkbox" value="LL"> Lower Low</label>
+<label><input type="checkbox" value="BOS"> BOS</label>
+<label><input type="checkbox" value="Sweep"> Sweep</label>
+</div>
+</section>
+
+<section>
+<h3>📦 Zone / Pattern</h3>
+<div class="grid">
 <label><input type="checkbox" value="FVG"> FVG</label>
-<label><input type="checkbox" value="OrderBlock"> Order Block</label>
-<label><input type="checkbox" value="Premium"> Premium</label>
-<label><input type="checkbox" value="Discount"> Discount</label>
-<label><input type="checkbox" value="Fib"> Fib ระยะสำคัญ</label>
+<label><input type="checkbox" value="OB"> Order Block</label>
+<label><input type="checkbox" value="BullEngulf"> Bullish Engulfing</label>
+<label><input type="checkbox" value="BearEngulf"> Bearish Engulfing</label>
 <label><input type="checkbox" value="Trendline"> Trendline</label>
-<label><input type="checkbox" value="BullEngulf"> Bullish Engulf</label>
+<label><input type="checkbox" value="Fib"> Fibonacci Zone</label>
 </div>
 </section>
 
@@ -78,11 +148,11 @@ td,th{border:1px solid #333;padding:6px;text-align:center}
 <label><input type="checkbox" value="Calm"> ใจนิ่ง</label>
 <label><input type="checkbox" value="FollowPlan"> ทำตามแผน</label>
 <label><input type="checkbox" value="FOMO"> FOMO ❌</label>
-<label><input type="checkbox" value="Revenge"> Revenge ❌</label>
+<label><input type="checkbox" value="Revenge"> Revenge Trade ❌</label>
 </div>
 </section>
 
-<button onclick="saveTrade()">บันทึกไม้</button>
+<button class="save" onclick="saveTrade()">บันทึกไม้</button>
 
 <section>
 <h3>📊 สรุปรวม</h3>
@@ -90,81 +160,102 @@ td,th{border:1px solid #333;padding:6px;text-align:center}
 </section>
 
 <section>
-<h3>🔥 Top 5 Combo</h3>
+<h3>🔥 Top Combo</h3>
 <table id="comboTable">
-<tr><th>Combo</th><th>Win%</th></tr>
+<tr><th>Combo</th><th>WinRate</th></tr>
 </table>
 </section>
 
 <section>
 <h3>📌 Session × Grade</h3>
 <table id="sgTable">
-<tr><th>Session</th><th>Grade</th><th>Win%</th></tr>
+<tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>
 </table>
 </section>
 
-<button class="red" onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
+<button class="clear" onclick="clearAll()">🗑 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-let data = JSON.parse(localStorage.getItem("pb")) || [];
+const KEY="FINAL_PLAYBOOK_V1";
+
+function load(){
+  return JSON.parse(localStorage.getItem(KEY)||"[]");
+}
+function save(data){
+  localStorage.setItem(KEY,JSON.stringify(data));
+}
 
 function saveTrade(){
-  let checks=[...document.querySelectorAll("input[type=checkbox]:checked")].map(c=>c.value);
+  const data=load();
+  const checks=[...document.querySelectorAll("input[type=checkbox]:checked")].map(c=>c.value);
   data.push({
     date:new Date().toISOString().slice(0,10),
+    week:new Date().getWeek(),
+    month:new Date().getMonth()+1,
     session:session.value,
     grade:grade.value,
     result:result.value,
+    stoM5:stoM5.value,
+    stoM15:stoM15.value,
     combo:checks.sort().join("+")
   });
-  localStorage.setItem("pb",JSON.stringify(data));
+  save(data);
   render();
 }
 
+Date.prototype.getWeek=function(){
+  const d=new Date(Date.UTC(this.getFullYear(),this.getMonth(),this.getDate()));
+  const day=d.getUTCDay()||7;
+  d.setUTCDate(d.getUTCDate()+4-day);
+  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d-yearStart)/86400000)+1)/7);
+}
+
 function render(){
-  let win=data.filter(d=>d.result=="Win").length;
-  let loss=data.length-win;
-  document.getElementById("summary").innerHTML=
-    `Win: ${win} | Loss: ${loss} | WinRate: ${(win/(data.length||1)*100).toFixed(1)}%`;
+  const d=load();
+  const win=d.filter(x=>x.result=="Win").length;
+  const loss=d.length-win;
+  summary.innerHTML=`Win: ${win} | Loss: ${loss} | WinRate: ${(win/d.length*100||0).toFixed(1)}%`;
 
-  // Combo
-  let map={};
-  data.forEach(d=>{
-    if(!map[d.combo]) map[d.combo]={w:0,t:0};
-    map[d.combo].t++;
-    if(d.result=="Win") map[d.combo].w++;
+  // combo
+  comboTable.innerHTML="<tr><th>Combo</th><th>WinRate</th></tr>";
+  const map={};
+  d.forEach(x=>{
+    if(!map[x.combo]) map[x.combo]={w:0,t:0};
+    map[x.combo].t++;
+    if(x.result=="Win") map[x.combo].w++;
   });
-  let rows=Object.entries(map)
-    .filter(x=>x[1].t>=2)
-    .sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)
-    .slice(0,5);
-  comboTable.innerHTML="<tr><th>Combo</th><th>Win%</th></tr>";
-  rows.forEach(r=>{
-    comboTable.innerHTML+=`<tr><td>${r[0]}</td><td>${(r[1].w/r[1].t*100).toFixed(1)}%</td></tr>`;
-  });
+  Object.entries(map)
+   .sort((a,b)=>b[1].w/b[1].t-a[1].w/a[1].t)
+   .slice(0,5)
+   .forEach(([c,v])=>{
+    comboTable.innerHTML+=`<tr><td>${c}</td><td>${(v.w/v.t*100).toFixed(1)}%</td></tr>`;
+   });
 
-  // Session × Grade
-  let sg={};
-  data.forEach(d=>{
-    let k=d.session+"|"+d.grade;
+  // session x grade
+  sgTable.innerHTML="<tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
+  const sg={};
+  d.forEach(x=>{
+    const k=x.session+"_"+x.grade;
     if(!sg[k]) sg[k]={w:0,t:0};
     sg[k].t++;
-    if(d.result=="Win") sg[k].w++;
+    if(x.result=="Win") sg[k].w++;
   });
-  sgTable.innerHTML="<tr><th>Session</th><th>Grade</th><th>Win%</th></tr>";
-  Object.entries(sg).forEach(r=>{
-    sgTable.innerHTML+=`<tr><td>${r[0].split("|")[0]}</td><td>${r[0].split("|")[1]}</td><td>${(r[1].w/r[1].t*100).toFixed(1)}%</td></tr>`;
+  Object.entries(sg).forEach(([k,v])=>{
+    const [s,g]=k.split("_");
+    sgTable.innerHTML+=`<tr><td>${s}</td><td>${g}</td><td>${(v.w/v.t*100).toFixed(1)}%</td></tr>`;
   });
 }
 
 function clearAll(){
-  if(confirm("ล้างทั้งหมด?")){
-    localStorage.clear();
-    data=[];
+  if(confirm("ล้างข้อมูลทั้งหมด?")){
+    localStorage.removeItem(KEY);
     render();
   }
 }
+
 render();
 </script>
+
 </body>
 </html>
