@@ -2,8 +2,6 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-
-<!-- สำคัญที่สุดสำหรับมือถือ -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Backtest Playbook (FULL)</title>
@@ -22,11 +20,11 @@
 
 body{
   margin:0;
-  padding:12px;
+  padding:10px;
   background:var(--bg);
   color:#eee;
-  font-family:Arial,Helvetica,sans-serif;
-  font-size:14px;
+  font-family:Arial, sans-serif;
+  font-size:15px;
 }
 
 /* ---------- CARD ---------- */
@@ -39,8 +37,8 @@ body{
 }
 
 /* ---------- HEAD ---------- */
-h2{margin:6px 0;font-size:22px}
-h3{margin:10px 0;font-size:16px}
+h2{font-size:22px;margin:6px 0}
+h3{font-size:18px;margin:10px 0}
 
 /* ---------- INPUT ---------- */
 select,textarea,button{
@@ -48,21 +46,26 @@ select,textarea,button{
   margin-top:8px;
   padding:14px;
   font-size:16px;
-  border-radius:10px;
-  border:1px solid #333;
   background:#0f0f0f;
   color:#eee;
+  border:1px solid #333;
+  border-radius:10px;
 }
 
 textarea{min-height:90px}
 
-/* ---------- CHECKBOX ---------- */
+/* ---------- CHECKBOX (Mobile Friendly) ---------- */
+.checkbox-group{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
 label{
   display:flex;
   align-items:center;
   gap:10px;
-  margin:8px 0;
-  font-size:16px;
+  font-size:15px;
 }
 
 input[type=checkbox]{
@@ -77,33 +80,26 @@ button.main{
   color:#000;
   font-weight:bold;
 }
-
-button.warn{
-  background:var(--yellow);
-  color:#000;
-}
-
-button.danger{
-  background:var(--red);
-  color:#fff;
-}
+button.warn{background:var(--yellow);color:#000}
+button.danger{background:var(--red);color:#fff}
 
 /* ---------- TABLE ---------- */
+.table-wrap{
+  overflow-x:auto;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
-  display:block;
-  overflow-x:auto;
+  font-size:14px;
+  min-width:520px;
 }
 
 th,td{
   border:1px solid #333;
   padding:8px;
-  font-size:13px;
   text-align:left;
-  white-space:normal;
-  word-break:break-word;
 }
 
 th{background:#222}
@@ -112,15 +108,13 @@ th{background:#222}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
-/* ---------- FORCE SHOW ON MOBILE ---------- */
-@media (max-width: 900px){
-  *{
-    display:block !important;
-    visibility:visible !important;
-    height:auto !important;
-    max-height:none !important;
-    opacity:1 !important;
+/* ---------- DESKTOP ONLY LAYOUT ---------- */
+@media(min-width:900px){
+  .row{
+    display:flex;
+    gap:12px;
   }
+  .row>.card{flex:1}
 }
 </style>
 </head>
@@ -129,221 +123,49 @@ th{background:#222}
 
 <h2>📘 Backtest Playbook (FULL)</h2>
 
-<!-- ================= INPUT ================= -->
-
+<!-- INPUT -->
 <div class="card">
 <h3>Session / Grade / Result</h3>
 <select id="session">
-  <option>Asia</option>
-  <option>London</option>
-  <option>New York</option>
+  <option>Asia</option><option>London</option><option>New York</option>
 </select>
-
 <select id="grade">
-  <option>A+</option>
-  <option>A</option>
-  <option>B+</option>
-  <option>B</option>
-  <option>C+</option>
-  <option>C</option>
+  <option>A+</option><option>A</option><option>B+</option><option>B</option>
+  <option>C+</option><option>C</option>
 </select>
-
 <select id="result">
-  <option>Win</option>
-  <option>Loss</option>
-</select>
-</div>
-
-<div class="card">
-<h3>STO</h3>
-<select id="sto5">
-  <option>None</option>
-  <option>OVB</option>
-  <option>OVS</option>
-</select>
-<select id="sto15">
-  <option>None</option>
-  <option>OVB</option>
-  <option>OVS</option>
+  <option>Win</option><option>Loss</option>
 </select>
 </div>
 
 <div class="card">
 <h3>Structure / Zone</h3>
-<label><input type="checkbox" value="Sweep"> Sweep</label>
-<label><input type="checkbox" value="BOS"> BOS</label>
-<label><input type="checkbox" value="Equal High"> Equal High</label>
-<label><input type="checkbox" value="Equal Low"> Equal Low</label>
-<label><input type="checkbox" value="Asia High"> Asia High</label>
-<label><input type="checkbox" value="Asia Low"> Asia Low</label>
-<label><input type="checkbox" value="Higher High"> Higher High</label>
-<label><input type="checkbox" value="Higher Low"> Higher Low</label>
-<label><input type="checkbox" value="Lower High"> Lower High</label>
-<label><input type="checkbox" value="Lower Low"> Lower Low</label>
+<div class="checkbox-group">
+<label><input type="checkbox" value="Sweep">Sweep</label>
+<label><input type="checkbox" value="BOS">BOS</label>
+<label><input type="checkbox" value="Equal High">Equal High</label>
+<label><input type="checkbox" value="Equal Low">Equal Low</label>
+<label><input type="checkbox" value="Asia High">Asia High</label>
+<label><input type="checkbox" value="Asia Low">Asia Low</label>
+<label><input type="checkbox" value="Higher High">Higher High</label>
+<label><input type="checkbox" value="Higher Low">Higher Low</label>
+<label><input type="checkbox" value="Lower High">Lower High</label>
+<label><input type="checkbox" value="Lower Low">Lower Low</label>
+</div>
 </div>
 
 <div class="card">
 <h3>Zone / Pattern</h3>
-<label><input type="checkbox" value="FVG"> FVG</label>
-<label><input type="checkbox" value="Order Block"> Order Block</label>
-<label><input type="checkbox" value="Bullish Engulfing"> Bullish Engulfing</label>
-<label><input type="checkbox" value="Bearish Engulfing"> Bearish Engulfing</label>
-<label><input type="checkbox" value="Trendline"> Trendline</label>
-<label><input type="checkbox" value="Fibonacci"> Fibonacci</label>
+<div class="checkbox-group">
+<label><input type="checkbox" value="FVG">FVG</label>
+<label><input type="checkbox" value="Order Block">Order Block</label>
+<label><input type="checkbox" value="Bullish Engulfing">Bullish Engulfing</label>
+<label><input type="checkbox" value="Bearish Engulfing">Bearish Engulfing</label>
+<label><input type="checkbox" value="Trendline">Trendline</label>
+<label><input type="checkbox" value="Fibonacci">Fibonacci</label>
+</div>
 </div>
 
 <div class="card">
 <h3>Trend / Risk</h3>
-<label><input type="checkbox" value="EMA M15"> EMA M15</label>
-<label><input type="checkbox" value="EMA H1"> EMA H1</label>
-<label><input type="checkbox" value="RR OK"> RR OK</label>
-</div>
-
-<div class="card">
-<h3>Mindset</h3>
-<label><input type="checkbox" value="Calm"> Calm</label>
-<label><input type="checkbox" value="Plan"> Plan</label>
-<label><input type="checkbox" value="FOMO"> FOMO</label>
-<label><input type="checkbox" value="Revenge"> Revenge</label>
-</div>
-
-<div class="card">
-<h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note" placeholder="เช่น ตามแผน / หลุดระบบ / FOMO / ใจไม่นิ่ง"></textarea>
-</div>
-
-<button class="main" onclick="saveTrade()">บันทึกไม้</button>
-<button class="warn" onclick="exportCSV()">Export Excel</button>
-
-<!-- ================= OUTPUT ================= -->
-
-<div class="card" id="summary"></div>
-<div class="card" id="sessionGrade"></div>
-<div class="card" id="losingStreak"></div>
-<div class="card" id="weeklyHeatmap"></div>
-<div class="card" id="sweepHeatmap"></div>
-<div class="card" id="combo"></div>
-<div class="card" id="winTable"></div>
-<div class="card" id="lossTable"></div>
-
-<button class="danger" onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
-
-<script>
-const KEY="PLAYBOOK_FULL";
-
-function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
-function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
-
-function saveTrade(){
-  if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
-  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
-  const d=load()
-  d.push({
-    date:new Date().toISOString().slice(0,10),
-    day:new Date().getDay(),
-    session:session.value,
-    grade:grade.value,
-    result:result.value,
-    tags,
-    note:note.value
-  })
-  save(d)
-  document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
-  note.value=""
-  render()
-}
-
-function render(){
-  const d=load()
-  if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return}
-
-  const win=d.filter(x=>x.result==="Win").length
-  summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WR ${(win/d.length*100).toFixed(1)}%`
-
-  renderSessionGrade(d)
-  renderLosingStreak(d)
-  renderWeekly(d)
-  renderSweep(d)
-  renderTables(d)
-}
-
-function renderSessionGrade(d){
-  let m={}
-  d.forEach(x=>{
-    const k=x.session+"|"+x.grade
-    if(!m[k])m[k]={w:0,l:0}
-    x.result==="Win"?m[k].w++:m[k].l++
-  })
-  let h="<h3>Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WR</th></tr>"
-  Object.entries(m).forEach(([k,v])=>{
-    const [s,g]=k.split("|")
-    h+=`<tr><td>${s}</td><td>${g}</td><td>${(v.w/(v.w+v.l)*100).toFixed(1)}%</td></tr>`
-  })
-  h+="</table>"
-  sessionGrade.innerHTML=h
-}
-
-function renderLosingStreak(d){
-  let s=0
-  for(let i=d.length-1;i>=0;i--){
-    if(d[i].result==="Loss")s++;else break
-  }
-  losingStreak.innerHTML=`<h3>Losing Streak</h3><table><tr><th>ล่าสุด</th><th>แพ้ติด</th></tr><tr><td>${d[d.length-1].date}</td><td>${s}</td></tr></table>`
-}
-
-function renderWeekly(d){
-  const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
-  let w=Array(7).fill(0).map(()=>({w:0,l:0}))
-  d.forEach(x=>x.result==="Win"?w[x.day].w++:w[x.day].l++)
-  let h="<h3>Heatmap วันในสัปดาห์</h3><table><tr><th>วัน</th><th>Win</th><th>Loss</th><th>WR</th></tr>"
-  w.forEach((x,i)=>{
-    const t=x.w+x.l,wr=t?x.w/t:0
-    h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}"><td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`
-  })
-  h+="</table>"
-  weeklyHeatmap.innerHTML=h
-}
-
-function renderSweep(d){
-  let s={w:0,l:0},n={w:0,l:0}
-  d.forEach(x=>{
-    (x.tags.includes("Sweep")?s:n)[x.result==="Win"?"w":"l"]++
-  })
-  sweepHeatmap.innerHTML=`<h3>Sweep vs No Sweep</h3>
-  <table><tr><th>Type</th><th>Win</th><th>Loss</th><th>WR</th></tr>
-  <tr><td>Sweep</td><td>${s.w}</td><td>${s.l}</td><td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td></tr>
-  <tr><td>No Sweep</td><td>${n.w}</td><td>${n.l}</td><td>${(n.w/(n.w+n.l||1)*100).toFixed(1)}%</td></tr></table>`
-}
-
-function renderTables(d){
-  let winRows="",lossRows=""
-  d.forEach(x=>{
-    const row=`<tr><td>${x.date}</td><td>${x.session}</td><td>${x.grade}</td><td>${x.tags.join(", ")}</td><td>${x.note}</td></tr>`
-    x.result==="Win"?winRows+=row:lossRows+=row
-  })
-  winTable.innerHTML=`<h3>✅ ไม้ชนะ</h3><table><tr><th>Date</th><th>Session</th><th>Grade</th><th>Tags</th><th>Note</th></tr>${winRows}</table>`
-  lossTable.innerHTML=`<h3>❌ ไม้แพ้</h3><table><tr><th>Date</th><th>Session</th><th>Grade</th><th>Tags</th><th>Note</th></tr>${lossRows}</table>`
-}
-
-function exportCSV(){
-  const d=load()
-  let csv="Date,Session,Grade,Result,Tags,Note\n"
-  d.forEach(x=>csv+=`${x.date},${x.session},${x.grade},${x.result},"${x.tags.join("|")}","${x.note}"\n`)
-  const a=document.createElement("a")
-  a.href=URL.createObjectURL(new Blob(["\ufeff"+csv]))
-  a.download="Backtest_Playbook.csv"
-  a.click()
-}
-
-function clearAll(){
-  if(confirm("ล้างข้อมูลทั้งหมด?")){
-    localStorage.removeItem(KEY)
-    render()
-  }
-}
-
-render()
-</script>
-
-</body>
-</html>
+<div class="checkbox-group">
