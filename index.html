@@ -35,7 +35,6 @@ h3{font-size:18px;margin:10px 0}
  margin-bottom:14px;
 }
 
-/* ===== INPUT ===== */
 select,textarea,button{
  width:100%;
  margin-top:8px;
@@ -48,27 +47,24 @@ select,textarea,button{
 }
 textarea{min-height:90px}
 
-/* ===== CHECKBOX ROW ===== */
-.check{
+/* checkbox row */
+.row{
  display:flex;
  align-items:center;
- gap:14px;
- margin:12px 0;
- cursor:pointer;
+ gap:12px;
+ margin:10px 0;
 }
-.check label{cursor:pointer;font-size:16px}
-.check input[type=checkbox]{
+.row label{cursor:pointer}
+input[type=checkbox]{
  width:26px;
  height:26px;
  accent-color:var(--green);
 }
 
-/* ===== BUTTON ===== */
 button.main{background:var(--green);color:#000;font-weight:bold}
 button.warn{background:var(--yellow);color:#000;font-weight:bold}
 button.danger{background:var(--red);color:#fff;font-weight:bold}
 
-/* ===== TABLE ===== */
 table{
  width:100%;
  border-collapse:collapse;
@@ -85,13 +81,11 @@ th{background:#222}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
-/* ===== MOBILE BOOST ===== */
 @media (max-width:768px){
  body{transform:scale(1.12);transform-origin:top center}
  h2{font-size:26px}
  h3{font-size:22px}
- .check label{font-size:20px}
- .check input[type=checkbox]{width:34px;height:34px}
+ input[type=checkbox]{width:34px;height:34px}
  select,textarea,button{font-size:20px;padding:18px}
  .card{padding:20px;border-radius:18px}
  table{font-size:16px}
@@ -111,11 +105,13 @@ th{background:#222}
  <option>London</option>
  <option>New York</option>
 </select>
+
 <select id="grade">
  <option>A+</option><option>A</option>
  <option>B+</option><option>B</option>
  <option>C+</option><option>C</option>
 </select>
+
 <select id="result">
  <option>Win</option>
  <option>Loss</option>
@@ -134,39 +130,39 @@ th{background:#222}
 
 <div class="card">
 <h3>🏗 Structure / Liquidity</h3>
-<div class="check"><input id="sweep" type="checkbox" value="Sweep"><label for="sweep">Sweep</label></div>
-<div class="check"><input id="bos" type="checkbox" value="BOS"><label for="bos">BOS</label></div>
-<div class="check"><input id="liq" type="checkbox" value="Liquidity"><label for="liq">Liquidity (EQH / EQL / Asia)</label></div>
+<div class="row"><input id="sweep" type="checkbox" value="Sweep"><label for="sweep">Sweep</label></div>
+<div class="row"><input id="bos" type="checkbox" value="BOS"><label for="bos">BOS</label></div>
+<div class="row"><input id="liq" type="checkbox" value="Liquidity"><label for="liq">Liquidity (EQH / EQL / Asia)</label></div>
 </div>
 
 <div class="card">
 <h3>📐 Zone / Pattern</h3>
-<div class="check"><input id="fvg" type="checkbox" value="FVG"><label for="fvg">FVG</label></div>
-<div class="check"><input id="ob" type="checkbox" value="Order Block"><label for="ob">Order Block</label></div>
-<div class="check"><input id="be" type="checkbox" value="Bullish Engulfing"><label for="be">Bullish Engulfing</label></div>
-<div class="check"><input id="se" type="checkbox" value="Bearish Engulfing"><label for="se">Bearish Engulfing</label></div>
-<div class="check"><input id="pd" type="checkbox" value="Premium Discount"><label for="pd">Premium / Discount (50%)</label></div>
+<div class="row"><input id="fvg" type="checkbox" value="FVG"><label for="fvg">FVG</label></div>
+<div class="row"><input id="ob" type="checkbox" value="Order Block"><label for="ob">Order Block</label></div>
+<div class="row"><input id="be" type="checkbox" value="Bullish Engulfing"><label for="be">Bullish Engulfing</label></div>
+<div class="row"><input id="se" type="checkbox" value="Bearish Engulfing"><label for="se">Bearish Engulfing</label></div>
+<div class="row"><input id="pd" type="checkbox" value="Premium Discount"><label for="pd">Premium / Discount (50%)</label></div>
 </div>
 
 <div class="card">
 <h3>📉 Trend / Risk</h3>
-<div class="check"><input id="ema15" type="checkbox" value="EMA200 M15"><label for="ema15">EMA200 M15</label></div>
-<div class="check"><input id="ema1h" type="checkbox" value="EMA200 H1"><label for="ema1h">EMA200 H1</label></div>
-<div class="check"><input id="rr" type="checkbox" value="RR OK"><label for="rr">RR คุ้ม</label></div>
-<div class="check"><input id="near" type="checkbox" value="Near Supply EMA"><label for="near">❌ ใกล้ Supply / EMA</label></div>
+<div class="row"><input id="ema15" type="checkbox" value="EMA200 M15"><label for="ema15">EMA200 M15</label></div>
+<div class="row"><input id="ema1h" type="checkbox" value="EMA200 H1"><label for="ema1h">EMA200 H1</label></div>
+<div class="row"><input id="rr" type="checkbox" value="RR OK"><label for="rr">RR คุ้ม</label></div>
+<div class="row"><input id="near" type="checkbox" value="Near Supply EMA"><label for="near">❌ ใกล้ Supply / EMA</label></div>
 </div>
 
 <div class="card">
 <h3>🧠 Mindset</h3>
-<div class="check"><input id="calm" type="checkbox" value="Calm"><label for="calm">ใจนิ่ง</label></div>
-<div class="check"><input id="plan" type="checkbox" value="Plan"><label for="plan">ทำตามแผน</label></div>
-<div class="check"><input id="fomo" type="checkbox" value="FOMO"><label for="fomo">FOMO ❌</label></div>
-<div class="check"><input id="rev" type="checkbox" value="Revenge"><label for="rev">Revenge ❌</label></div>
+<div class="row"><input id="calm" type="checkbox" value="Calm"><label for="calm">ใจนิ่ง</label></div>
+<div class="row"><input id="plan" type="checkbox" value="Plan"><label for="plan">ทำตามแผน</label></div>
+<div class="row"><input id="fomo" type="checkbox" value="FOMO"><label for="fomo">FOMO ❌</label></div>
+<div class="row"><input id="rev" type="checkbox" value="Revenge"><label for="rev">Revenge ❌</label></div>
 </div>
 
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
+<textarea id="note"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
