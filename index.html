@@ -35,6 +35,7 @@ h3{font-size:18px;margin:10px 0}
  margin-bottom:14px;
 }
 
+/* ===== INPUT ===== */
 select,textarea,button{
  width:100%;
  margin-top:8px;
@@ -47,23 +48,27 @@ select,textarea,button{
 }
 textarea{min-height:90px}
 
-label{
- display:inline-flex;
+/* ===== CHECKBOX ROW ===== */
+.check{
+ display:flex;
  align-items:center;
- gap:10px;
- margin:8px 14px 8px 0;
- font-size:16px;
+ gap:14px;
+ margin:12px 0;
+ cursor:pointer;
 }
-input[type=checkbox]{
+.check label{cursor:pointer;font-size:16px}
+.check input[type=checkbox]{
  width:26px;
  height:26px;
  accent-color:var(--green);
 }
 
+/* ===== BUTTON ===== */
 button.main{background:var(--green);color:#000;font-weight:bold}
 button.warn{background:var(--yellow);color:#000;font-weight:bold}
 button.danger{background:var(--red);color:#fff;font-weight:bold}
 
+/* ===== TABLE ===== */
 table{
  width:100%;
  border-collapse:collapse;
@@ -80,12 +85,13 @@ th{background:#222}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
+/* ===== MOBILE BOOST ===== */
 @media (max-width:768px){
  body{transform:scale(1.12);transform-origin:top center}
  h2{font-size:26px}
  h3{font-size:22px}
- label{font-size:20px;gap:14px;margin:12px 0}
- input[type=checkbox]{width:34px;height:34px}
+ .check label{font-size:20px}
+ .check input[type=checkbox]{width:34px;height:34px}
  select,textarea,button{font-size:20px;padding:18px}
  .card{padding:20px;border-radius:18px}
  table{font-size:16px}
@@ -105,13 +111,11 @@ th{background:#222}
  <option>London</option>
  <option>New York</option>
 </select>
-
 <select id="grade">
  <option>A+</option><option>A</option>
  <option>B+</option><option>B</option>
  <option>C+</option><option>C</option>
 </select>
-
 <select id="result">
  <option>Win</option>
  <option>Loss</option>
@@ -121,47 +125,43 @@ th{background:#222}
 <div class="card">
 <h3>📊 STO</h3>
 <select id="sto5">
- <option>None</option>
- <option>OVB</option>
- <option>OVS</option>
+ <option>None</option><option>OVB</option><option>OVS</option>
 </select>
 <select id="sto15">
- <option>None</option>
- <option>OVB</option>
- <option>OVS</option>
+ <option>None</option><option>OVB</option><option>OVS</option>
 </select>
 </div>
 
 <div class="card">
 <h3>🏗 Structure / Liquidity</h3>
-<label><input type="checkbox" value="Sweep">Sweep</label>
-<label><input type="checkbox" value="BOS">BOS</label>
-<label><input type="checkbox" value="Liquidity">Liquidity (EQH / EQL / Asia)</label>
+<div class="check"><input id="sweep" type="checkbox" value="Sweep"><label for="sweep">Sweep</label></div>
+<div class="check"><input id="bos" type="checkbox" value="BOS"><label for="bos">BOS</label></div>
+<div class="check"><input id="liq" type="checkbox" value="Liquidity"><label for="liq">Liquidity (EQH / EQL / Asia)</label></div>
 </div>
 
 <div class="card">
 <h3>📐 Zone / Pattern</h3>
-<label><input type="checkbox" value="FVG">FVG</label>
-<label><input type="checkbox" value="Order Block">Order Block</label>
-<label><input type="checkbox" value="Bullish Engulfing">Bullish Engulfing</label>
-<label><input type="checkbox" value="Bearish Engulfing">Bearish Engulfing</label>
-<label><input type="checkbox" value="Premium Discount">Premium / Discount (50%)</label>
+<div class="check"><input id="fvg" type="checkbox" value="FVG"><label for="fvg">FVG</label></div>
+<div class="check"><input id="ob" type="checkbox" value="Order Block"><label for="ob">Order Block</label></div>
+<div class="check"><input id="be" type="checkbox" value="Bullish Engulfing"><label for="be">Bullish Engulfing</label></div>
+<div class="check"><input id="se" type="checkbox" value="Bearish Engulfing"><label for="se">Bearish Engulfing</label></div>
+<div class="check"><input id="pd" type="checkbox" value="Premium Discount"><label for="pd">Premium / Discount (50%)</label></div>
 </div>
 
 <div class="card">
 <h3>📉 Trend / Risk</h3>
-<label><input type="checkbox" value="EMA M15">EMA200 M15</label>
-<label><input type="checkbox" value="EMA H1">EMA200 H1</label>
-<label><input type="checkbox" value="RR OK">RR คุ้ม</label>
-<label><input type="checkbox" value="Near Supply EMA">❌ ใกล้ Supply / EMA</label>
+<div class="check"><input id="ema15" type="checkbox" value="EMA200 M15"><label for="ema15">EMA200 M15</label></div>
+<div class="check"><input id="ema1h" type="checkbox" value="EMA200 H1"><label for="ema1h">EMA200 H1</label></div>
+<div class="check"><input id="rr" type="checkbox" value="RR OK"><label for="rr">RR คุ้ม</label></div>
+<div class="check"><input id="near" type="checkbox" value="Near Supply EMA"><label for="near">❌ ใกล้ Supply / EMA</label></div>
 </div>
 
 <div class="card">
 <h3>🧠 Mindset</h3>
-<label><input type="checkbox" value="Calm">ใจนิ่ง</label>
-<label><input type="checkbox" value="Plan">ทำตามแผน</label>
-<label><input type="checkbox" value="FOMO">FOMO ❌</label>
-<label><input type="checkbox" value="Revenge">Revenge ❌</label>
+<div class="check"><input id="calm" type="checkbox" value="Calm"><label for="calm">ใจนิ่ง</label></div>
+<div class="check"><input id="plan" type="checkbox" value="Plan"><label for="plan">ทำตามแผน</label></div>
+<div class="check"><input id="fomo" type="checkbox" value="FOMO"><label for="fomo">FOMO ❌</label></div>
+<div class="check"><input id="rev" type="checkbox" value="Revenge"><label for="rev">Revenge ❌</label></div>
 </div>
 
 <div class="card">
@@ -183,7 +183,53 @@ th{background:#222}
 <button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-/* SCRIPT เหมือนเดิม ใช้ได้ 100% ไม่ต้องแก้ */
+const KEY="PLAYBOOK_FULL";
+const $=id=>document.getElementById(id);
+function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
+
+function saveTrade(){
+ if(!$("note").value.trim()){alert("ต้องใส่หมายเหตุ");return}
+ const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
+ const d=load()
+ d.push({
+  date:new Date().toISOString().slice(0,10),
+  day:new Date().getDay(),
+  session:$("session").value,
+  grade:$("grade").value,
+  result:$("result").value,
+  tags,
+  note:$("note").value
+ })
+ save(d)
+ document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
+ $("note").value=""
+ render()
+}
+
+function render(){
+ const d=load()
+ if(!d.length){$("summary").innerHTML="ยังไม่มีข้อมูล";return}
+ const w=d.filter(x=>x.result==="Win").length
+ $("summary").innerHTML=`🔥 Win ${w} | Loss ${d.length-w} | WR ${(w/d.length*100).toFixed(1)}%`
+}
+
+function exportCSV(){
+ const d=load(); if(!d.length)return
+ let csv="Date,Session,Grade,Result,Tags,Note\n"
+ d.forEach(t=>csv+=`${t.date},${t.session},${t.grade},${t.result},"${t.tags.join("|")}","${t.note}"\n`)
+ const b=new Blob(["\ufeff"+csv],{type:"text/csv"})
+ const a=document.createElement("a")
+ a.href=URL.createObjectURL(b);a.download="Backtest.csv";a.click()
+}
+
+function clearAll(){
+ if(confirm("ล้างข้อมูลทั้งหมด?")){
+  localStorage.clear()
+  render()
+ }
+}
+render()
 </script>
 
 </body>
