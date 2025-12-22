@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Backtest Playbook v4 FULL</title>
+<title>Backtest Playbook v5 PRO</title>
 <style>
 body{background:#0b0b0b;color:#eee;font-family:Arial,Helvetica,sans-serif;padding:14px}
 h2,h3{margin:10px 0}
@@ -17,44 +17,80 @@ button.danger{background:#dc2626;color:#fff}
 table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
 th,td{border:1px solid #333;padding:6px;text-align:left}
 th{background:#222}
-.warn{color:#ff4d4d;font-weight:bold}
-.ok{color:#22c55e}
+.warn{background:#5b1d1d;color:#ff6b6b;font-weight:bold}
+.mid{background:#5a4a1d;color:#ffd166}
+.ok{background:#1f4f2f;color:#7CFC98}
+.alertBox{background:#7a1d1d;color:#fff;padding:10px;border-radius:8px}
 </style>
 </head>
 
 <body>
 
-<h2>📘 Backtest Playbook v4 FULL</h2>
+<h2>📘 Backtest Playbook v5 PRO</h2>
 
+<!-- ================= INPUT ================= -->
 <div class="card">
 <h3>Session / Grade / Result</h3>
-<select id="session">
-  <option>Asia</option><option>London</option><option>New York</option>
-</select>
-<select id="grade">
-  <option>A+</option><option>A</option><option>B+</option><option>B</option>
-</select>
-<select id="result">
-  <option>Win</option><option>Loss</option>
-</select>
+<select id="session"><option>Asia</option><option>London</option><option>New York</option></select>
+<select id="grade"><option>A+</option><option>A</option><option>B+</option><option>B</option></select>
+<select id="result"><option>Win</option><option>Loss</option></select>
 </div>
 
 <div class="card">
-<h3>Structure / Pattern</h3>
-<label><input type="checkbox" value="Sweep"> Sweep</label>
+<h3>STO</h3>
+<select id="sto5"><option>None</option><option>OVS</option><option>OVB</option></select>
+<select id="sto15"><option>None</option><option>OVS</option><option>OVB</option></select>
+</div>
+
+<div class="card">
+<h3>Structure / Zone</h3>
+<label><input type="checkbox" value="EqualHigh"> Equal High</label>
+<label><input type="checkbox" value="EqualLow"> Equal Low</label>
+<label><input type="checkbox" value="AsiaHigh"> Asia High</label>
+<label><input type="checkbox" value="AsiaLow"> Asia Low</label>
+<label><input type="checkbox" value="PrevHigh"> Prev Day High</label>
+<label><input type="checkbox" value="PrevLow"> Prev Day Low</label>
+<label><input type="checkbox" value="HH"> Higher High</label>
+<label><input type="checkbox" value="HL"> Higher Low</label>
+<label><input type="checkbox" value="LH"> Lower High</label>
+<label><input type="checkbox" value="LL"> Lower Low</label>
 <label><input type="checkbox" value="BOS"> BOS</label>
+<label><input type="checkbox" value="Sweep"> Sweep</label>
+</div>
+
+<div class="card">
+<h3>Zone / Pattern</h3>
 <label><input type="checkbox" value="FVG"> FVG</label>
-<label><input type="checkbox" value="OB"> Order Block</label>
-<label><input type="checkbox" value="EMA"> EMA</label>
+<label><input type="checkbox" value="BullEng"> Bullish Engulfing</label>
+<label><input type="checkbox" value="BearEng"> Bearish Engulfing</label>
+<label><input type="checkbox" value="Trendline"> Trendline</label>
+<label><input type="checkbox" value="Fibo"> Fibonacci Zone</label>
+</div>
+
+<div class="card">
+<h3>Trend / Risk</h3>
+<label><input type="checkbox" value="EMA_M15"> EMA200 M15</label>
+<label><input type="checkbox" value="EMA_H1"> EMA200 H1</label>
+<label><input type="checkbox" value="RR_OK"> RR คุ้ม</label>
+<label><input type="checkbox" value="Near_Supply"> ใกล้ Supply/EMA ❌</label>
+</div>
+
+<div class="card">
+<h3>Mindset</h3>
+<label><input type="checkbox" value="Calm"> ใจนิ่ง</label>
+<label><input type="checkbox" value="FollowPlan"> ทำตามแผน</label>
+<label><input type="checkbox" value="FOMO"> FOMO ❌</label>
+<label><input type="checkbox" value="Revenge"> Revenge ❌</label>
 </div>
 
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับทุกไม้)</h3>
-<textarea id="note" placeholder="ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
+<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO / รีบเข้า"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
 
+<!-- ================= OUTPUT ================= -->
 <div class="card" id="summary"></div>
 <div class="card" id="combo"></div>
 <div class="card" id="lossReason"></div>
@@ -64,32 +100,35 @@ th{background:#222}
 <button class="danger" onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="PLAYBOOK_V4";
+const KEY="PLAYBOOK_V5";
 
 /* ---------- STORAGE ---------- */
 function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
-/* ---------- REASON ---------- */
-function reasonFromNote(note){
+/* ---------- REASON FROM NOTE ---------- */
+function extractReason(note){
   if(note.includes("FOMO")) return "FOMO";
   if(note.includes("หลุด")) return "หลุดเทรนด์";
   if(note.includes("สวน")) return "สวนเทรนด์";
+  if(note.includes("รีบ")) return "รีบเข้า";
   if(note.includes("ตาม")) return "ตามแผน";
   return "อื่นๆ";
 }
 
-/* ---------- COMBO (Sweep first) ---------- */
+/* ---------- COMBO (Sweep First) ---------- */
 function buildCombo(t){
-  let tools=[];
-  if(t.tags.includes("Sweep")) tools.push("Sweep");
-  if(t.tags.includes("BOS")) tools.push("BOS");
-  if(t.tags.includes("FVG")) tools.push("FVG");
-  if(t.tags.includes("OB")) tools.push("OB");
-  if(t.tags.includes("EMA")) tools.push("EMA");
-  if(!t.tags.includes("Sweep")) tools.unshift("No Sweep");
-  tools.unshift(t.grade);
-  return tools.join(" + ")+" | "+t.reason;
+  let arr=[];
+  if(t.tags.includes("Sweep")) arr.push("Sweep");
+  if(t.tags.includes("BOS")) arr.push("BOS");
+  if(t.tags.includes("FVG")) arr.push("FVG");
+  if(t.tags.includes("BullEng")) arr.push("BullEng");
+  if(t.tags.includes("BearEng")) arr.push("BearEng");
+  if(t.tags.includes("EMA_H1")) arr.push("EMA_H1");
+  if(t.tags.includes("EMA_M15")) arr.push("EMA_M15");
+  if(!t.tags.includes("Sweep")) arr.unshift("No Sweep");
+  arr.unshift(t.grade);
+  return arr.join(" + ")+" | "+t.reason;
 }
 
 /* ---------- SAVE ---------- */
@@ -99,17 +138,19 @@ function saveTrade(){
     return;
   }
   const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
-  const d=load();
-  d.push({
+  const data=load();
+  data.push({
     date:new Date().toISOString().slice(0,10),
     session:session.value,
     grade:grade.value,
     result:result.value,
+    sto5:sto5.value,
+    sto15:sto15.value,
     tags,
     note:note.value.trim(),
-    reason:reasonFromNote(note.value)
+    reason:extractReason(note.value)
   });
-  save(d);
+  save(data);
   document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false);
   note.value="";
   render();
@@ -120,10 +161,7 @@ function render(){
   const d=load();
   if(!d.length){
     summary.innerHTML="ยังไม่มีข้อมูล";
-    combo.innerHTML="";
-    lossReason.innerHTML="";
-    heatmap.innerHTML="";
-    alert.innerHTML="";
+    combo.innerHTML=lossReason.innerHTML=heatmap.innerHTML=alert.innerHTML="";
     return;
   }
 
@@ -131,7 +169,7 @@ function render(){
   const win=d.filter(x=>x.result==="Win").length;
   summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
 
-  /* TOP COMBO */
+  /* COMBO */
   const map={};
   d.forEach(t=>{
     const k=buildCombo(t);
@@ -148,11 +186,12 @@ function render(){
   h+="</table>";
   combo.innerHTML=h;
 
-  /* LOSS REASON */
+  /* LOSS REASON + HEATMAP */
   const lossMap={};
   d.filter(x=>x.result==="Loss").forEach(t=>{
     lossMap[t.reason]=(lossMap[t.reason]||0)+1;
   });
+
   let lr="<h3>❌ เหตุแพ้</h3><table><tr><th>เหตุ</th><th>จำนวน</th></tr>";
   Object.entries(lossMap).forEach(([k,v])=>{
     lr+=`<tr><td>${k}</td><td>${v}</td></tr>`;
@@ -160,16 +199,16 @@ function render(){
   lr+="</table>";
   lossReason.innerHTML=lr;
 
-  /* HEATMAP */
-  let hm="<h3>📊 Heatmap เหตุแพ้</h3><table><tr><th>เหตุ</th><th>จำนวน</th></tr>";
-  ["FOMO","หลุดเทรนด์","สวนเทรนด์"].forEach(r=>{
+  let hm="<h3>🌡️ Heatmap เหตุแพ้</h3><table><tr><th>เหตุ</th><th>สถานะ</th></tr>";
+  ["FOMO","หลุดเทรนด์","สวนเทรนด์","รีบเข้า"].forEach(r=>{
     const c=lossMap[r]||0;
-    hm+=`<tr><td>${r}</td><td class="${c>=3?'warn':'ok'}">${c}</td></tr>`;
+    let cls=c>=5?"warn":c>=3?"mid":"ok";
+    hm+=`<tr class="${cls}"><td>${r}</td><td>${c}</td></tr>`;
   });
   hm+="</table>";
   heatmap.innerHTML=hm;
 
-  /* ALERT 5 LOSS STREAK */
+  /* ALERT STREAK */
   let streak=0,last="";
   for(let i=d.length-1;i>=0;i--){
     if(d[i].result!=="Loss") break;
@@ -178,7 +217,7 @@ function render(){
     }else break;
   }
   alert.innerHTML = streak>=5
-    ? `<h3 class="warn">⚠️ เตือน: แพ้ ${streak} ไม้ติด เพราะ ${last}</h3>`
+    ? `<div class="alertBox">⚠️ เตือน: คุณแพ้ <b>${last}</b> ${streak} ไม้ติด — หยุด / ลดไม้ / พัก</div>`
     : "";
 }
 
