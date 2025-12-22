@@ -1,108 +1,14 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backtest Playbook Final Pro+ v2</title>
-
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<meta http-equiv="Pragma" content="no-cache" />
-<meta http-equiv="Expires" content="0" />
-
-<style>
-body{background:#0b0b0b;color:#eee;font-family:Arial;padding:14px}
-h1{color:#4cff4c}
-section{border:1px solid #222;padding:12px;margin:16px 0;border-radius:8px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-label{display:block}
-select,textarea,button{width:100%;padding:10px;margin-top:6px;font-size:15px}
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border:1px solid #333;padding:6px;text-align:center}
-th{background:#111}
-button.save{background:#2ecc71;color:#000;font-weight:bold}
-button.clear{background:#e74c3c;color:#fff;font-weight:bold}
-.good{color:#4cff4c}
-.bad{color:#ff4c4c}
-</style>
-</head>
-
-<body>
-
-<h1>📘 Backtest Playbook – Final Pro+ v2</h1>
-
-<!-- ================= INPUT ================= -->
-<section>
-<h3>Session / Grade / Result</h3>
-<select id="session">
-  <option>Asia</option>
-  <option>London</option>
-  <option>New York</option>
-</select>
-
-<select id="grade">
-  <option>A+</option>
-  <option>A</option>
-  <option>B+</option>
-  <option>B</option>
-  <option>C</option>
-</select>
-
-<select id="result">
-  <option>Win</option>
-  <option>Loss</option>
-</select>
-</section>
-
-<section>
-<h3>Checklist (ติ๊กตามจริง)</h3>
-<div class="grid">
-<label><input type="checkbox" value="Sweep"> Sweep</label>
-<label><input type="checkbox" value="BOS"> BOS</label>
-<label><input type="checkbox" value="HL_LH"> HL / LH</label>
-<label><input type="checkbox" value="FVG"> FVG</label>
-<label><input type="checkbox" value="OB"> Order Block</label>
-<label><input type="checkbox" value="EMA_TREND"> EMA เทรนด์ตรง</label>
-<label><input type="checkbox" value="RR_OK"> RR คุ้ม</label>
-<label><input type="checkbox" value="CONFIRM"> Confirm</label>
-<label><input type="checkbox" value="CALM"> ใจนิ่ง</label>
-<label><input type="checkbox" value="FOMO"> FOMO ❌</label>
-<label><input type="checkbox" value="REVENGE"> Revenge ❌</label>
-<label><input type="checkbox" value="NEAR_EMA"> ใกล้ EMA / Supply ❌</label>
-</div>
-</section>
-
-<section>
-<h3>📝 หมายเหตุ (เหตุผลที่เข้า)</h3>
-<textarea id="note" rows="3"
-placeholder="เช่น Sweep PDH + BOS + EMA H1 / พลาดเพราะเข้าเร็ว"></textarea>
-</section>
-
-<button class="save" onclick="saveTrade()">บันทึกไม้</button>
-
-<!-- ================= SUMMARY ================= -->
-<section>
-<h3>📊 Summary</h3>
-<div id="summary"></div>
-</section>
-
-<section>
-<h3>🔥 ชนะ / แพ้ แยกตามเทคนิค (%)</h3>
-<div id="reasonStats"></div>
-</section>
-
-<button class="clear" onclick="clearAll()">🗑 ล้างข้อมูลทั้งหมด</button>
-
 <script>
+/* ================= CONFIG ================= */
 const KEY = "FINAL_PRO_PLUS_V2";
 
-/* ---------- STORAGE ---------- */
+/* ================= STORAGE ================= */
 function load(){ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
 function save(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
 
-/* ---------- SCORE ENGINE ---------- */
+/* ================= SCORE ================= */
 function scoreTrade(tags){
   let s = 0;
-
   if(tags.includes("Sweep")) s += 2;
   if(tags.includes("BOS")) s += 2;
   if(tags.includes("HL_LH")) s += 1;
@@ -116,14 +22,39 @@ function scoreTrade(tags){
   if(tags.includes("FOMO")) s -= 2;
   if(tags.includes("REVENGE")) s -= 2;
   if(tags.includes("NEAR_EMA")) s -= 1;
-
   return s;
 }
 
-/* ---------- SAVE TRADE ---------- */
+/* ================= BUILD COMBO KEY ================= */
+/* เอา Sweep นำ + เกรด + ดึงเหตุจากหมายเหตุ */
+function buildComboKey(trade){
+  const tags = trade.tags || [];
+  let tools = [];
+
+  if(tags.includes("Sweep")) tools.push("Sweep");
+  if(tags.includes("OB")) tools.push("OB");
+  if(tags.includes("BOS")) tools.push("BOS");
+  if(tags.includes("FVG")) tools.push("FVG");
+  if(tags.includes("EMA_TREND")) tools.push("EMA");
+
+  if(!tags.includes("Sweep")) tools.unshift("No Sweep");
+  if(trade.grade) tools.unshift(trade.grade);
+
+  let reason = "";
+  if(trade.note){
+    if(trade.note.includes("หลุด")) reason = "หลุดเทรนด์";
+    else if(trade.note.includes("สวน")) reason = "สวนเทรนด์";
+    else if(trade.note.includes("FOMO")) reason = "FOMO";
+  }
+
+  return reason ? `${tools.join(" + ")} | ${reason}` : tools.join(" + ");
+}
+
+/* ================= SAVE TRADE ================= */
 function saveTrade(){
   const data = load();
-  const tags = [...document.querySelectorAll("input[type=checkbox]:checked")].map(c=>c.value);
+  const tags = [...document.querySelectorAll("input[type=checkbox]:checked")]
+                .map(c=>c.value);
 
   const trade = {
     date: new Date().toISOString().slice(0,10),
@@ -143,12 +74,12 @@ function saveTrade(){
   render();
 }
 
-/* ---------- RENDER SUMMARY ---------- */
+/* ================= SUMMARY ================= */
 function render(){
   const d = load();
   if(!d.length){
     summary.innerHTML = "ยังไม่มีข้อมูล";
-    reasonStats.innerHTML = "";
+    comboSummary.innerHTML = "";
     return;
   }
 
@@ -157,54 +88,56 @@ function render(){
   const avgScore = (d.reduce((a,b)=>a+b.score,0)/d.length).toFixed(2);
 
   summary.innerHTML = `
-    Win: <span class="good">${win}</span> |
-    Loss: <span class="bad">${loss}</span> |
+    Win: <b style="color:#4cff4c">${win}</b> |
+    Loss: <b style="color:#ff4c4c">${loss}</b> |
     WinRate: ${(win/d.length*100).toFixed(1)}% |
     Avg Score: ${avgScore}
   `;
 
-  renderReasonStats(d);
+  renderComboSummary(d);
 }
 
-/* ---------- REASON STATS ---------- */
-function renderReasonStats(trades){
+/* ================= COMBO SUMMARY ================= */
+/* สรุปชนะ–แพ้ ตามเทคนิค + หมายเหตุ เป็น % */
+function renderComboSummary(trades){
   const map = {};
 
   trades.forEach(t=>{
-    t.tags.forEach(tag=>{
-      if(!map[tag]) map[tag] = {w:0,l:0};
-      t.result==="Win" ? map[tag].w++ : map[tag].l++;
-    });
+    const key = buildComboKey(t);
+    if(!map[key]) map[key] = {win:0, loss:0};
+    t.result === "Win" ? map[key].win++ : map[key].loss++;
   });
 
   let html = `
   <table>
     <tr>
-      <th>เทคนิค</th>
+      <th>เทคนิค / เหตุผล</th>
       <th>Win %</th>
       <th>Win / Loss</th>
-    </tr>
-  `;
+    </tr>`;
 
   Object.entries(map)
-    .sort((a,b)=> (b[1].w/(b[1].w+b[1].l)) - (a[1].w/(a[1].w+a[1].l)))
+    .sort((a,b)=>{
+      const wa = a[1].win/(a[1].win+a[1].loss || 1);
+      const wb = b[1].win/(b[1].win+b[1].loss || 1);
+      return wb - wa;
+    })
     .forEach(([k,v])=>{
-      const total = v.w + v.l;
-      const wr = total ? (v.w/total*100).toFixed(1) : 0;
+      const total = v.win + v.loss;
+      const wr = total ? (v.win/total*100).toFixed(1) : 0;
       html += `
-        <tr>
-          <td>${k}</td>
-          <td>${wr}%</td>
-          <td>${v.w} / ${v.l}</td>
-        </tr>
-      `;
+      <tr>
+        <td>${k}</td>
+        <td>${wr}%</td>
+        <td>${v.win} / ${v.loss}</td>
+      </tr>`;
     });
 
   html += "</table>";
-  reasonStats.innerHTML = html;
+  comboSummary.innerHTML = html;
 }
 
-/* ---------- CLEAR ---------- */
+/* ================= CLEAR ================= */
 function clearAll(){
   if(confirm("ล้างข้อมูลทั้งหมด?")){
     localStorage.removeItem(KEY);
@@ -214,6 +147,3 @@ function clearAll(){
 
 render();
 </script>
-
-</body>
-</html>
