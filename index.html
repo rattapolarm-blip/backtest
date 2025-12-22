@@ -116,61 +116,178 @@ th{background:#222}
 <script>
 const KEY="PLAYBOOK_FULL";
 
-function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
-function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
+/* ===== STORAGE ===== */
+function load(){ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+function save(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
 
+/* ===== SAVE (FIXED) ===== */
 function saveTrade(){
- if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
- const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
- const d=load()
- d.push({
-  date:new Date().toISOString().slice(0,10),
-  day:new Date().getDay(),
-  session:session.value,
-  grade:grade.value,
-  result:result.value,
-  sto5:sto5.value,
-  sto15:sto15.value,
-  tags,
-  note:note.value
- })
- save(d)
- document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
- note.value=""
- render()
+  const noteEl = document.getElementById("note");
+  if(!noteEl.value.trim()){
+    alert("ต้องใส่หมายเหตุ");
+    return;
+  }
+
+  const data = load();
+
+  const tags = [...document.querySelectorAll("input[type=checkbox]:checked")]
+                .map(c => c.value);
+
+  data.push({
+    date: new Date().toISOString().slice(0,10),
+    day: new Date().getDay(),
+    session: document.getElementById("session").value,
+    grade: document.getElementById("grade").value,
+    result: document.getElementById("result").value,
+    sto5: document.getElementById("sto5").value,
+    sto15: document.getElementById("sto15").value,
+    tags,
+    note: noteEl.value.trim()
+  });
+
+  save(data);
+
+  document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
+  noteEl.value="";
+  render();
 }
 
+/* ===== COMBO KEY ===== */
 function comboKey(t){
- let arr=[t.tags.includes("Sweep")?"Sweep":"No Sweep"]
- ;["BOS","FVG","OB","EMA"].forEach(x=>{if(t.tags.includes(x))arr.push(x)})
- arr.unshift(t.grade)
- return arr.join(" + ")+" | "+t.note
+  let arr=[];
+  arr.push(t.tags.includes("Sweep")?"Sweep":"No Sweep");
+  ["BOS","FVG","OB","EMA"].forEach(x=>{
+    if(t.tags.includes(x)) arr.push(x);
+  });
+  arr.unshift(t.grade);
+  return arr.join(" + ")+" | "+t.note;
 }
 
-/* ===== render / summary / heatmap / alert / export / clear ===== */
-/* (เหมือนที่คุณใช้ก่อนหน้า — logic ทำงานครบ) */
+/* ===== RENDER ===== */
+function render(){
+  const d = load();
+  if(!d.length){
+    summary.innerHTML="ยังไม่มีข้อมูล";
+    combo.innerHTML=sessionGrade.innerHTML=
+    losingStreak.innerHTML=weeklyHeatmap.innerHTML=
+    sweepHeatmap.innerHTML="";
+    return;
+  }
 
-function clearAll(){
- if(confirm("ล้างข้อมูลทั้งหมด?")){
-  localStorage.clear()
-  location.reload()
- }
+  const win = d.filter(x=>x.result==="Win").length;
+  summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
+
+  renderCombo(d);
+  renderSessionGrade(d);
+  renderLosingStreak(d);
+  renderWeeklyHeatmap(d);
+  renderSweepHeatmap(d);
 }
 
+/* ===== TOP COMBO ===== */
+function renderCombo(d){
+  const map={};
+  d.forEach(t=>{
+    const k=comboKey(t);
+    if(!map[k]) map[k]={w:0,l:0};
+    t.result==="Win"?map[k].w++:map[k].l++;
+  });
+
+  let html="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
+  Object.entries(map).forEach(([k,v])=>{
+    const wr=v.w/(v.w+v.l);
+    html+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
+      <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`;
+  });
+  html+="</table>";
+  combo.innerHTML=html;
+}
+
+/* ===== SESSION x GRADE ===== */
+function renderSessionGrade(d){
+  const m={};
+  d.forEach(t=>{
+    const k=t.session+"|"+t.grade;
+    if(!m[k]) m[k]={w:0,l:0};
+    t.result==="Win"?m[k].w++:m[k].l++;
+  });
+
+  let html="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
+  Object.entries(m).forEach(([k,v])=>{
+    const [s,g]=k.split("|");
+    html+=`<tr><td>${s}</td><td>${g}</td><td>${(v.w/(v.w+v.l)*100).toFixed(1)}%</td></tr>`;
+  });
+  html+="</table>";
+  sessionGrade.innerHTML=html;
+}
+
+/* ===== LOSING STREAK ===== */
+function renderLosingStreak(d){
+  let streak=0;
+  for(let i=d.length-1;i>=0;i--){
+    if(d[i].result==="Loss") streak++;
+    else break;
+  }
+  losingStreak.innerHTML=`<h3>📉 Losing Streak</h3>
+  <table><tr><th>วันที่</th><th>แพ้ติด</th></tr>
+  <tr><td>${d[d.length-1].date}</td><td>${streak}</td></tr></table>`;
+}
+
+/* ===== WEEKLY HEATMAP ===== */
+function renderWeeklyHeatmap(d){
+  const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  let arr=Array(7).fill(0).map(()=>({w:0,l:0}));
+  d.forEach(t=> t.result==="Win"?arr[t.day].w++:arr[t.day].l++);
+
+  let html="<h3>📊 Heatmap วันในสัปดาห์</h3><table><tr><th>วัน</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>";
+  arr.forEach((x,i)=>{
+    const tot=x.w+x.l;
+    const wr=tot?x.w/tot:0;
+    html+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
+      <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`;
+  });
+  html+="</table>";
+  weeklyHeatmap.innerHTML=html;
+}
+
+/* ===== SWEEP vs NO SWEEP ===== */
+function renderSweepHeatmap(d){
+  let s={w:0,l:0}, n={w:0,l:0};
+  d.forEach(t=>{
+    if(t.tags.includes("Sweep")) t.result==="Win"?s.w++:s.l++;
+    else t.result==="Win"?n.w++:n.l++;
+  });
+  sweepHeatmap.innerHTML=`<h3>📊 Heatmap : Sweep vs No Sweep</h3>
+  <table><tr><th>Type</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>
+  <tr><td>Sweep</td><td>${s.w}</td><td>${s.l}</td><td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td></tr>
+  <tr><td>No Sweep</td><td>${n.w}</td><td>${n.l}</td><td>${(n.w/(n.w+n.l||1)*100).toFixed(1)}%</td></tr>
+  </table>`;
+}
+
+/* ===== EXPORT ===== */
 function exportCSV(){
- const d=load()
- let csv="Date,Session,Grade,Result,STO5,STO15,Tags,Note\n"
- d.forEach(t=>{
-  csv+=`${t.date},${t.session},${t.grade},${t.result},${t.sto5},${t.sto15},"${t.tags.join("|")}","${t.note}"\n`
- })
- const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"})
- const a=document.createElement("a")
- a.href=URL.createObjectURL(blob)
- a.download="Backtest_Playbook.csv"
- a.click()
+  const d=load();
+  if(!d.length){ alert("ไม่มีข้อมูล"); return; }
+  let csv="Date,Session,Grade,Result,STO5,STO15,Tags,Note\n";
+  d.forEach(t=>{
+    csv+=`${t.date},${t.session},${t.grade},${t.result},${t.sto5},${t.sto15},"${t.tags.join("|")}","${t.note}"\n`;
+  });
+  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Backtest_Playbook.csv";
+  a.click();
 }
 
-render()
+/* ===== CLEAR ===== */
+function clearAll(){
+  if(confirm("ล้างข้อมูลทั้งหมด?")){
+    localStorage.clear();
+    location.reload();
+  }
+}
+
+render();
 </script>
 
 </body>
