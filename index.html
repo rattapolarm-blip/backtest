@@ -1,96 +1,123 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Backtest Playbook FULL</title>
 
 <style>
 :root{
- --bg:#0b0b0b; --card:#141414; --line:#2a2a2a;
- --green:#22c55e; --yellow:#ca8a04; --red:#dc2626;
+  --bg:#0b0b0b; --card:#141414; --line:#2a2a2a;
+  --green:#22c55e; --yellow:#ca8a04; --red:#dc2626;
 }
 *{box-sizing:border-box}
 body{
- background:var(--bg); color:#eee; font-family:Arial;
- margin:0; padding:12px;
+  background:var(--bg);
+  color:#eee;
+  font-family:Arial;
+  margin:0;
+  padding:10px;
+  transform:scale(0.95);   /* ลดขนาดรวม */
+  transform-origin:top center;
 }
-
-/* ---------- MOBILE SCALE ---------- */
-@media(max-width:768px){
- body{font-size:15px}
- input[type=checkbox]{width:26px;height:26px}
- select,textarea,button{padding:14px;font-size:16px}
-}
-
-/* ---------- UI ---------- */
+h2{margin:6px 0;font-size:20px}
+h3{margin:10px 0;font-size:16px}
 .card{
- background:var(--card);
- border:1px solid var(--line);
- border-radius:14px;
- padding:14px;
- margin-bottom:14px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:12px;
 }
-h2{font-size:22px;margin:6px 0}
-h3{font-size:18px;margin:8px 0}
-label{display:inline-flex;align-items:center;gap:8px;margin:6px 10px 6px 0}
-
 select,textarea,button{
- width:100%; margin-top:8px;
- background:#0f0f0f; color:#eee;
- border:1px solid #333; border-radius:8px;
+  width:100%;
+  margin-top:8px;
+  padding:14px;
+  background:#0f0f0f;
+  color:#eee;
+  border:1px solid #333;
+  border-radius:12px;
+  font-size:16px;
 }
-textarea{min-height:90px}
-
+textarea{min-height:80px}
+label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:10px 0;
+  font-size:16px;
+}
+input[type=checkbox]{
+  width:26px;
+  height:26px;
+  accent-color:var(--green);
+}
 button.main{background:var(--green);color:#000;font-weight:bold}
 button.warn{background:var(--yellow);color:#000}
 button.danger{background:var(--red);color:#fff}
 
-/* ---------- TABLE ---------- */
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
-th,td{border:1px solid #333;padding:8px;text-align:left}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+  font-size:13px;
+}
+th,td{
+  border:1px solid #333;
+  padding:8px;
+  vertical-align:top;
+}
 th{background:#222}
-
 .ok{background:#1f4f2f}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
-/* TAG CELL */
-.tag-cell{
- white-space:nowrap;
- max-width:260px;
- overflow-x:auto;
+@media(min-width:900px){
+  body{max-width:900px;margin:auto}
 }
 </style>
 </head>
 
 <body>
 
-<h2>📘 Backtest Playbook FULL</h2>
+<h2>📘 Backtest Playbook (FULL)</h2>
 
 <div class="card">
 <h3>Session / Grade / Result</h3>
-<select id="session"><option>Asia</option><option>London</option><option>New York</option></select>
-<select id="grade">
-<option>A+</option><option>A</option><option>B+</option><option>B</option>
-<option>C+</option><option>C</option>
+<select id="session">
+  <option>Asia</option>
+  <option>London</option>
+  <option>New York</option>
 </select>
-<select id="result"><option>Win</option><option>Loss</option></select>
+
+<select id="grade">
+  <option>A+</option>
+  <option>A</option>
+  <option>B+</option>
+  <option>B</option>
+  <option>C+</option>
+  <option>C</option>
+</select>
+
+<select id="result">
+  <option>Win</option>
+  <option>Loss</option>
+</select>
 </div>
 
 <div class="card">
 <h3>Structure / Pattern</h3>
-<label><input type="checkbox" value="Sweep">Sweep</label>
-<label><input type="checkbox" value="BOS">BOS</label>
-<label><input type="checkbox" value="FVG">FVG</label>
-<label><input type="checkbox" value="OB">Order Block</label>
-<label><input type="checkbox" value="EMA M15">EMA M15</label>
-<label><input type="checkbox" value="EMA H1">EMA H1</label>
+<label><input type="checkbox" value="Sweep"> Sweep</label>
+<label><input type="checkbox" value="BOS"> BOS</label>
+<label><input type="checkbox" value="FVG"> FVG</label>
+<label><input type="checkbox" value="Order Block"> Order Block</label>
+<label><input type="checkbox" value="EMA M15"> EMA M15</label>
+<label><input type="checkbox" value="EMA H1"> EMA H1</label>
 </div>
 
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note" placeholder="ตามแผน / FOMO / หลุดโครง / สวนเทรนด์"></textarea>
+<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
@@ -99,22 +126,26 @@ th{background:#222}
 <div class="card" id="summary"></div>
 <div class="card" id="winTable"></div>
 <div class="card" id="lossTable"></div>
-<div class="card" id="combo"></div>
 <div class="card" id="sessionGrade"></div>
+<div class="card" id="losingStreak"></div>
+<div class="card" id="weeklyHeatmap"></div>
+<div class="card" id="sweepHeatmap"></div>
 
 <button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
 
 <script>
 const KEY="PLAYBOOK_FULL";
-const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
-const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
+
+function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
 function saveTrade(){
- if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return;}
+ if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
  const d=load();
  d.push({
   date:new Date().toISOString().slice(0,10),
+  day:new Date().getDay(),
   session:session.value,
   grade:grade.value,
   result:result.value,
@@ -129,36 +160,104 @@ function saveTrade(){
 
 function render(){
  const d=load();
- if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return;}
+ if(!d.length){
+  summary.innerHTML="ยังไม่มีข้อมูล";
+  winTable.innerHTML=lossTable.innerHTML=sessionGrade.innerHTML=
+  losingStreak.innerHTML=weeklyHeatmap.innerHTML=sweepHeatmap.innerHTML="";
+  return;
+ }
+ const win=d.filter(x=>x.result==="Win").length;
+ summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
 
- const win=d.filter(x=>x.result==="Win");
- const loss=d.filter(x=>x.result==="Loss");
- const wr=(win.length+d.length?win.length/d.length*100:0).toFixed(1);
-
- summary.innerHTML=`🔥 Win ${win.length} | Loss ${loss.length} | WinRate ${wr}%`;
-
- renderTable(win,"📈 ไม้ชนะ",winTable);
- renderTable(loss,"📉 ไม้แพ้",lossTable);
+ renderTables(d);
+ renderSessionGrade(d);
+ renderLosingStreak(d);
+ renderWeeklyHeatmap(d);
+ renderSweepHeatmap(d);
 }
 
-function renderTable(arr,title,el){
- let h=`<h3>${title}</h3><table><tr>
- <th>Date</th><th>Session</th><th>Grade</th><th>Tags</th><th>Note</th></tr>`;
- arr.forEach(t=>{
-  h+=`<tr>
+function renderTables(d){
+ let w="",l="";
+ d.forEach(t=>{
+  const row=`
+  <tr>
    <td>${t.date}</td>
    <td>${t.session}</td>
    <td>${t.grade}</td>
-   <td class="tag-cell">${t.tags.join(" | ")}</td>
+   <td>${t.tags.join("<br>")}</td>
    <td>${t.note}</td>
   </tr>`;
+  t.result==="Win"?w+=row:l+=row;
+ });
+
+ winTable.innerHTML=`
+ <h3>🟢 ไม้ชนะ</h3>
+ <table><tr><th>Date</th><th>Session</th><th>Grade</th><th>Tags</th><th>Note</th></tr>${w}</table>`;
+
+ lossTable.innerHTML=`
+ <h3>🔴 ไม้แพ้</h3>
+ <table><tr><th>Date</th><th>Session</th><th>Grade</th><th>Tags</th><th>Note</th></tr>${l}</table>`;
+}
+
+function renderSessionGrade(d){
+ const m={};
+ d.forEach(t=>{
+  const k=t.session+"|"+t.grade;
+  if(!m[k])m[k]={w:0,l:0};
+  t.result==="Win"?m[k].w++:m[k].l++;
+ });
+ let h="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
+ Object.entries(m).forEach(([k,v])=>{
+  const [s,g]=k.split("|");
+  h+=`<tr><td>${s}</td><td>${g}</td><td>${(v.w/(v.w+v.l)*100).toFixed(1)}%</td></tr>`;
  });
  h+="</table>";
- el.innerHTML=h;
+ sessionGrade.innerHTML=h;
+}
+
+function renderLosingStreak(d){
+ let s=0;
+ for(let i=d.length-1;i>=0;i--){
+  if(d[i].result==="Loss")s++; else break;
+ }
+ losingStreak.innerHTML=`
+ <h3>📉 Losing Streak</h3>
+ <table><tr><th>ล่าสุด</th><th>แพ้ติด</th></tr>
+ <tr><td>${d[d.length-1].date}</td><td>${s}</td></tr></table>`;
+}
+
+function renderWeeklyHeatmap(d){
+ const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+ let w=Array(7).fill(0).map(()=>({w:0,l:0}));
+ d.forEach(t=>t.result==="Win"?w[t.day].w++:w[t.day].l++);
+ let h="<h3>📊 Heatmap วันในสัปดาห์</h3><table><tr><th>วัน</th><th>Win</th><th>Loss</th><th>WR</th></tr>";
+ w.forEach((x,i)=>{
+  const tot=x.w+x.l;
+  const wr=tot?x.w/tot:0;
+  h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
+   <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`;
+ });
+ h+="</table>";
+ weeklyHeatmap.innerHTML=h;
+}
+
+function renderSweepHeatmap(d){
+ let s={w:0,l:0},n={w:0,l:0};
+ d.forEach(t=>{
+  if(t.tags.includes("Sweep"))t.result==="Win"?s.w++:s.l++;
+  else t.result==="Win"?n.w++:n.l++;
+ });
+ sweepHeatmap.innerHTML=`
+ <h3>📊 Sweep vs No Sweep</h3>
+ <table><tr><th>Type</th><th>Win</th><th>Loss</th><th>WR</th></tr>
+ <tr><td>Sweep</td><td>${s.w}</td><td>${s.l}</td><td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td></tr>
+ <tr><td>No Sweep</td><td>${n.w}</td><td>${n.l}</td><td>${(n.w/(n.w+n.l||1)*100).toFixed(1)}%</td></tr>
+ </table>`;
 }
 
 function exportCSV(){
- const d=load(); if(!d.length)return;
+ const d=load();
+ if(!d.length){alert("ไม่มีข้อมูล");return}
  let csv="Date,Session,Grade,Result,Tags,Note\n";
  d.forEach(t=>{
   csv+=`${t.date},${t.session},${t.grade},${t.result},"${t.tags.join("|")}","${t.note}"\n`;
@@ -172,11 +271,13 @@ function exportCSV(){
 
 function clearAll(){
  if(confirm("ล้างข้อมูลทั้งหมด?")){
-  localStorage.clear();
+  localStorage.removeItem(KEY);
   render();
  }
 }
+
 render();
 </script>
+
 </body>
 </html>
