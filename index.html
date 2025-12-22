@@ -169,3 +169,80 @@ th{background:#222}
 <div class="card">
 <h3>Trend / Risk</h3>
 <div class="checkbox-group">
+<label><input type="checkbox" value="EMA M15">EMA M15</label>
+<label><input type="checkbox" value="EMA H1">EMA H1</label>
+<label><input type="checkbox" value="RR OK">RR OK</label>
+<label><input type="checkbox" value="Near Supply">ใกล้ Supply/EMA ❌</label>
+</div>
+</div>
+
+<div class="card">
+<h3>Mindset</h3>
+<div class="checkbox-group">
+<label><input type="checkbox" value="Calm">ใจนิ่ง</label>
+<label><input type="checkbox" value="Plan">ทำตามแผน</label>
+<label><input type="checkbox" value="FOMO">FOMO ❌</label>
+<label><input type="checkbox" value="Revenge">Revenge ❌</label>
+</div>
+</div>
+
+<div class="card">
+<h3>📝 หมายเหตุ (บังคับ)</h3>
+<textarea id="note"></textarea>
+</div>
+
+<button class="main" onclick="saveTrade()">บันทึกไม้</button>
+
+<div class="card" id="summary"></div>
+<div class="card table-wrap" id="sessionGrade"></div>
+<div class="card table-wrap" id="losingStreak"></div>
+<div class="card table-wrap" id="weeklyHeatmap"></div>
+<div class="card table-wrap" id="sweepHeatmap"></div>
+<div class="card table-wrap" id="combo"></div>
+
+<button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
+
+<script>
+const KEY="PLAYBOOK_FULL";
+
+function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
+
+function saveTrade(){
+ if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
+ const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
+ const d=load()
+ d.push({
+  date:new Date().toISOString().slice(0,10),
+  day:new Date().getDay(),
+  session:session.value,
+  grade:grade.value,
+  result:result.value,
+  tags,
+  note:note.value
+ })
+ save(d)
+ document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
+ note.value=""
+ render()
+}
+
+function render(){
+ const d=load()
+ if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return}
+ const win=d.filter(x=>x.result==="Win").length
+ summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`
+}
+
+function clearAll(){
+ if(confirm("ล้างข้อมูลทั้งหมด?")){
+  localStorage.removeItem(KEY)
+  location.reload()
+ }
+}
+
+render()
+</script>
+
+</body>
+</html>
