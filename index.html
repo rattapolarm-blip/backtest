@@ -1,3 +1,35 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Backtest Final Pro Plus v2</title>
+  <style>
+    body{
+      background:#111;
+      color:#eee;
+      font-family: Arial, Helvetica, sans-serif;
+      padding:20px;
+    }
+    table{
+      border-collapse:collapse;
+      width:100%;
+      margin-top:10px;
+    }
+    th,td{
+      border:1px solid #444;
+      padding:6px 8px;
+      text-align:left;
+    }
+    th{ background:#222; }
+  </style>
+</head>
+
+<body>
+
+<h2>Backtest Final Pro Plus v2</h2>
+<div id="summary"></div>
+<div id="comboSummary" style="margin-top:20px"></div>
+
 <script>
 /* ================= CONFIG ================= */
 const KEY = "FINAL_PRO_PLUS_V2";
@@ -26,7 +58,6 @@ function scoreTrade(tags){
 }
 
 /* ================= BUILD COMBO KEY ================= */
-/* เอา Sweep นำ + เกรด + ดึงเหตุจากหมายเหตุ */
 function buildComboKey(trade){
   const tags = trade.tags || [];
   let tools = [];
@@ -50,31 +81,7 @@ function buildComboKey(trade){
   return reason ? `${tools.join(" + ")} | ${reason}` : tools.join(" + ");
 }
 
-/* ================= SAVE TRADE ================= */
-function saveTrade(){
-  const data = load();
-  const tags = [...document.querySelectorAll("input[type=checkbox]:checked")]
-                .map(c=>c.value);
-
-  const trade = {
-    date: new Date().toISOString().slice(0,10),
-    session: session.value,
-    grade: grade.value,
-    result: result.value,
-    tags,
-    score: scoreTrade(tags),
-    note: note.value
-  };
-
-  data.push(trade);
-  save(data);
-
-  document.querySelectorAll("input[type=checkbox]").forEach(c=>c.checked=false);
-  note.value="";
-  render();
-}
-
-/* ================= SUMMARY ================= */
+/* ================= RENDER ================= */
 function render(){
   const d = load();
   if(!d.length){
@@ -85,65 +92,18 @@ function render(){
 
   const win = d.filter(x=>x.result==="Win").length;
   const loss = d.length - win;
-  const avgScore = (d.reduce((a,b)=>a+b.score,0)/d.length).toFixed(2);
 
   summary.innerHTML = `
     Win: <b style="color:#4cff4c">${win}</b> |
     Loss: <b style="color:#ff4c4c">${loss}</b> |
-    WinRate: ${(win/d.length*100).toFixed(1)}% |
-    Avg Score: ${avgScore}
+    WinRate: ${(win/d.length*100).toFixed(1)}%
   `;
 
-  renderComboSummary(d);
-}
-
-/* ================= COMBO SUMMARY ================= */
-/* สรุปชนะ–แพ้ ตามเทคนิค + หมายเหตุ เป็น % */
-function renderComboSummary(trades){
   const map = {};
-
-  trades.forEach(t=>{
-    const key = buildComboKey(t);
-    if(!map[key]) map[key] = {win:0, loss:0};
-    t.result === "Win" ? map[key].win++ : map[key].loss++;
+  d.forEach(t=>{
+    const k = buildComboKey(t);
+    if(!map[k]) map[k]={w:0,l:0};
+    t.result==="Win" ? map[k].w++ : map[k].l++;
   });
 
-  let html = `
-  <table>
-    <tr>
-      <th>เทคนิค / เหตุผล</th>
-      <th>Win %</th>
-      <th>Win / Loss</th>
-    </tr>`;
-
-  Object.entries(map)
-    .sort((a,b)=>{
-      const wa = a[1].win/(a[1].win+a[1].loss || 1);
-      const wb = b[1].win/(b[1].win+b[1].loss || 1);
-      return wb - wa;
-    })
-    .forEach(([k,v])=>{
-      const total = v.win + v.loss;
-      const wr = total ? (v.win/total*100).toFixed(1) : 0;
-      html += `
-      <tr>
-        <td>${k}</td>
-        <td>${wr}%</td>
-        <td>${v.win} / ${v.loss}</td>
-      </tr>`;
-    });
-
-  html += "</table>";
-  comboSummary.innerHTML = html;
-}
-
-/* ================= CLEAR ================= */
-function clearAll(){
-  if(confirm("ล้างข้อมูลทั้งหมด?")){
-    localStorage.removeItem(KEY);
-    render();
-  }
-}
-
-render();
-</script>
+  let htm
