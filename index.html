@@ -93,6 +93,8 @@ table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
+  display:block;
+  overflow-x:auto;
 }
 
 th,td{
@@ -110,7 +112,7 @@ th{background:#222}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
-/* ---------- FORCE SHOW ON MOBILE (ของเดิม) ---------- */
+/* ---------- FORCE SHOW ON MOBILE ---------- */
 @media (max-width: 900px){
   *{
     display:block !important;
@@ -119,12 +121,6 @@ th{background:#222}
     max-height:none !important;
     opacity:1 !important;
   }
-}
-
-/* ---------- MOBILE FIX (เพิ่ม ไม่ตัด) ---------- */
-@media (max-width:900px){
-  table{display:table!important}
-  thead,tbody,tr,th,td{display:table-cell!important}
 }
 </style>
 </head>
@@ -198,18 +194,17 @@ th{background:#222}
 
 <div class="card">
 <h3>Trend / Risk</h3>
-<label><input type="checkbox" value="EMA200 M15"> EMA200 เทรน M15</label>
-<label><input type="checkbox" value="EMA200 H1"> EMA200 เทรน H1</label>
-<label><input type="checkbox" value="RR OK"> RR คุ้ม</label>
-<label><input type="checkbox" value="Near Supply/EMA"> ใกล้ Supply / EMA ❌</label>
+<label><input type="checkbox" value="EMA M15"> EMA M15</label>
+<label><input type="checkbox" value="EMA H1"> EMA H1</label>
+<label><input type="checkbox" value="RR OK"> RR OK</label>
 </div>
 
 <div class="card">
 <h3>Mindset</h3>
-<label><input type="checkbox" value="Calm"> ใจนิ่ง</label>
-<label><input type="checkbox" value="Plan"> ทำตามแผน</label>
-<label><input type="checkbox" value="FOMO"> FOMO ❌</label>
-<label><input type="checkbox" value="Revenge"> Revenge ❌</label>
+<label><input type="checkbox" value="Calm"> Calm</label>
+<label><input type="checkbox" value="Plan"> Plan</label>
+<label><input type="checkbox" value="FOMO"> FOMO</label>
+<label><input type="checkbox" value="Revenge"> Revenge</label>
 </div>
 
 <div class="card">
@@ -227,6 +222,7 @@ th{background:#222}
 <div class="card" id="losingStreak"></div>
 <div class="card" id="weeklyHeatmap"></div>
 <div class="card" id="sweepHeatmap"></div>
+<div class="card" id="combo"></div>
 <div class="card" id="winTable"></div>
 <div class="card" id="lossTable"></div>
 
@@ -238,20 +234,9 @@ const KEY="PLAYBOOK_FULL";
 function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
-/* ===== STO TAG ===== */
-function getSTOTags(){
-  let t=[]
-  if(sto5.value!=="None") t.push("STO M5 "+sto5.value)
-  if(sto15.value!=="None") t.push("STO M15 "+sto15.value)
-  return t
-}
-
 function saveTrade(){
   if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
-  const tags=[
-    ...getSTOTags(),
-    ...[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
-  ]
+  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
   const d=load()
   d.push({
     date:new Date().toISOString().slice(0,10),
@@ -271,8 +256,10 @@ function saveTrade(){
 function render(){
   const d=load()
   if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return}
+
   const win=d.filter(x=>x.result==="Win").length
   summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WR ${(win/d.length*100).toFixed(1)}%`
+
   renderSessionGrade(d)
   renderLosingStreak(d)
   renderWeekly(d)
@@ -287,10 +274,10 @@ function renderSessionGrade(d){
     if(!m[k])m[k]={w:0,l:0}
     x.result==="Win"?m[k].w++:m[k].l++
   })
-  let h="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>"
+  let h="<h3>Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WR</th></tr>"
   Object.entries(m).forEach(([k,v])=>{
     const [s,g]=k.split("|")
-    h+=`<tr><td>${s}</td><td>${g}</td><td>${(v.w/(v.w+v.l||1)*100).toFixed(1)}%</td></tr>`
+    h+=`<tr><td>${s}</td><td>${g}</td><td>${(v.w/(v.w+v.l)*100).toFixed(1)}%</td></tr>`
   })
   h+="</table>"
   sessionGrade.innerHTML=h
@@ -301,7 +288,7 @@ function renderLosingStreak(d){
   for(let i=d.length-1;i>=0;i--){
     if(d[i].result==="Loss")s++;else break
   }
-  losingStreak.innerHTML=`<h3>Losing Streak</h3><table><tr><th>แพ้ติด</th></tr><tr><td>${s}</td></tr></table>`
+  losingStreak.innerHTML=`<h3>Losing Streak</h3><table><tr><th>ล่าสุด</th><th>แพ้ติด</th></tr><tr><td>${d[d.length-1].date}</td><td>${s}</td></tr></table>`
 }
 
 function renderWeekly(d){
@@ -359,4 +346,4 @@ render()
 </script>
 
 </body>
-</html>
+</html> 
