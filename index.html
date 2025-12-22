@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Backtest Playbook FULL – Ultra Mobile</title>
+<title>Backtest Playbook FULL</title>
 
 <style>
 :root{
@@ -14,6 +14,7 @@
   --yellow:#ca8a04;
   --red:#dc2626;
 }
+
 *{box-sizing:border-box}
 
 body{
@@ -24,85 +25,61 @@ body{
   padding:14px;
 }
 
-/* ===== HEAD ===== */
-h2{margin:8px 0;font-size:26px}
-h3{margin:16px 0 10px;font-size:22px}
+h2{font-size:26px;margin:10px 0}
+h3{font-size:20px;margin:14px 0}
 
-/* ===== CARD ===== */
 .card{
   background:var(--card);
   border:2px solid var(--line);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:20px;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:18px;
 }
 
-/* ===== INPUT ===== */
 select, textarea, button{
   width:100%;
-  margin-top:14px;
-  padding:20px;
+  margin-top:12px;
+  padding:18px;
   background:#0f0f0f;
   color:#fff;
   border:2px solid #333;
-  border-radius:18px;
-  font-size:22px;
+  border-radius:16px;
+  font-size:20px;
 }
 
-textarea{
-  min-height:140px;
-  line-height:1.5;
-}
+textarea{min-height:120px}
 
-/* ===== BUTTON ===== */
-button.main{
-  background:var(--green);
-  color:#000;
-  font-weight:bold;
-  font-size:24px;
-}
-button.warn{
-  background:var(--yellow);
-  color:#000;
-  font-size:22px;
-}
-button.danger{
-  background:var(--red);
-  color:#fff;
-  font-size:22px;
-}
+button.main{background:var(--green);color:#000;font-weight:bold;font-size:22px}
+button.warn{background:var(--yellow);color:#000;font-size:20px}
+button.danger{background:var(--red);color:#fff;font-size:20px}
 
-/* ===== CHECKBOX (ULTRA) ===== */
 label{
   display:flex;
   align-items:center;
-  gap:18px;
-  margin:18px 0;
-  padding:18px 20px;
+  gap:16px;
+  margin:14px 0;
+  padding:14px 16px;
   background:#101010;
   border:2px solid #333;
-  border-radius:16px;
-  font-size:22px;
+  border-radius:14px;
+  font-size:20px;
 }
 
-/* checkbox ใหญ่ระดับปุ่ม */
 input[type=checkbox]{
-  width:34px;
-  height:34px;
+  width:32px;
+  height:32px;
   accent-color:var(--green);
-  flex-shrink:0;
 }
 
-/* ===== TABLE ===== */
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:14px;
-  font-size:18px;
+  font-size:16px;
 }
 th,td{
   border:2px solid #333;
-  padding:14px;
+  padding:12px;
 }
 th{background:#222}
 
@@ -110,7 +87,6 @@ th{background:#222}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
-/* ===== DESKTOP ===== */
 @media(min-width:900px){
   body{max-width:900px;margin:auto}
 }
@@ -121,7 +97,6 @@ th{background:#222}
 
 <h2>📘 Backtest Playbook (FULL)</h2>
 
-<!-- SESSION -->
 <div class="card">
 <h3>Session / Grade / Result</h3>
 <select id="session">
@@ -141,71 +116,18 @@ th{background:#222}
 </select>
 </div>
 
-<!-- STO -->
 <div class="card">
-<h3>📊 STO</h3>
-<select id="sto5">
-  <option>None</option>
-  <option>OVB</option>
-  <option>OVS</option>
-</select>
-<select id="sto15">
-  <option>None</option>
-  <option>OVB</option>
-  <option>OVS</option>
-</select>
+<h3>Structure / Pattern</h3>
+<label><input type="checkbox" value="Sweep"> Sweep</label>
+<label><input type="checkbox" value="BOS"> BOS</label>
+<label><input type="checkbox" value="FVG"> FVG</label>
+<label><input type="checkbox" value="OB"> Order Block</label>
+<label><input type="checkbox" value="EMA"> EMA</label>
 </div>
 
-<!-- STRUCTURE -->
-<div class="card">
-<h3>🏗 Structure / Zone</h3>
-<label><input type="checkbox" value="Sweep">Sweep</label>
-<label><input type="checkbox" value="BOS">BOS</label>
-<label><input type="checkbox" value="Equal High">Equal High</label>
-<label><input type="checkbox" value="Equal Low">Equal Low</label>
-<label><input type="checkbox" value="Asia High">Asia High</label>
-<label><input type="checkbox" value="Asia Low">Asia Low</label>
-<label><input type="checkbox" value="Prev Day High">Prev Day High</label>
-<label><input type="checkbox" value="Prev Day Low">Prev Day Low</label>
-<label><input type="checkbox" value="Higher High">Higher High</label>
-<label><input type="checkbox" value="Higher Low">Higher Low</label>
-<label><input type="checkbox" value="Lower High">Lower High</label>
-<label><input type="checkbox" value="Lower Low">Lower Low</label>
-</div>
-
-<!-- PATTERN -->
-<div class="card">
-<h3>📐 Zone / Pattern</h3>
-<label><input type="checkbox" value="FVG">FVG</label>
-<label><input type="checkbox" value="Order Block">Order Block</label>
-<label><input type="checkbox" value="Bullish Engulfing">Bullish Engulfing</label>
-<label><input type="checkbox" value="Bearish Engulfing">Bearish Engulfing</label>
-<label><input type="checkbox" value="Trendline">Trendline</label>
-<label><input type="checkbox" value="Fibonacci">Fibonacci Zone</label>
-</div>
-
-<!-- TREND -->
-<div class="card">
-<h3>📈 Trend / Risk</h3>
-<label><input type="checkbox" value="EMA200 M15">EMA200 M15</label>
-<label><input type="checkbox" value="EMA200 H1">EMA200 H1</label>
-<label><input type="checkbox" value="RR คุ้ม">RR คุ้ม</label>
-<label><input type="checkbox" value="ใกล้ Supply/EMA">ใกล้ Supply / EMA ❌</label>
-</div>
-
-<!-- MINDSET -->
-<div class="card">
-<h3>🧠 Mindset</h3>
-<label><input type="checkbox" value="ใจนิ่ง">ใจนิ่ง</label>
-<label><input type="checkbox" value="ทำตามแผน">ทำตามแผน</label>
-<label><input type="checkbox" value="FOMO">FOMO ❌</label>
-<label><input type="checkbox" value="Revenge">Revenge ❌</label>
-</div>
-
-<!-- NOTE -->
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note" placeholder="ตามแผน / หลุดเทรนด์ / สวน / FOMO"></textarea>
+<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / FOMO / สวนเทรนด์"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
@@ -221,132 +143,144 @@ th{background:#222}
 <button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="PLAYBOOK_ULTRA";
+const KEY="PLAYBOOK_FULL";
 
 function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
 function saveTrade(){
- if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
- const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
- const d=load()
- d.push({
-  date:new Date().toISOString().slice(0,10),
-  day:new Date().getDay(),
-  session:session.value,
-  grade:grade.value,
-  result:result.value,
-  sto5:sto5.value,
-  sto15:sto15.value,
-  tags,
-  note:note.value.trim()
- })
- save(d)
- document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
- note.value=""
- render()
-}
-
-function comboKey(t){
- let a=[t.grade,(t.tags.includes("Sweep")?"Sweep":"No Sweep")]
- ;["BOS","FVG","Order Block","EMA200 M15","EMA200 H1"].forEach(x=>{
-  if(t.tags.includes(x))a.push(x)
- })
- return a.join(" + ")+" | "+t.note
+  if(!note.value.trim()){
+    alert("ต้องใส่หมายเหตุ");
+    return;
+  }
+  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
+  const d=load();
+  d.push({
+    date:new Date().toISOString().slice(0,10),
+    day:new Date().getDay(),
+    session:session.value,
+    grade:grade.value,
+    result:result.value,
+    tags,
+    note:note.value
+  });
+  save(d);
+  document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false);
+  note.value="";
+  render();
 }
 
 function render(){
- const d=load()
- if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return}
- const win=d.filter(x=>x.result==="Win").length
- summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`
- renderCombo(d);renderSessionGrade(d);renderLosingStreak(d)
- renderWeeklyHeatmap(d);renderSweepHeatmap(d)
+  const d=load();
+  if(!d.length){
+    summary.innerHTML="ยังไม่มีข้อมูล";
+    combo.innerHTML=sessionGrade.innerHTML=losingStreak.innerHTML=
+    weeklyHeatmap.innerHTML=sweepHeatmap.innerHTML="";
+    return;
+  }
+
+  const win=d.filter(x=>x.result==="Win").length;
+  summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
+
+  renderCombo(d);
+  renderSessionGrade(d);
+  renderLosingStreak(d);
+  renderWeeklyHeatmap(d);
+  renderSweepHeatmap(d);
 }
 
 function renderCombo(d){
- const m={}
- d.forEach(t=>{
-  const k=comboKey(t);if(!m[k])m[k]={w:0,l:0}
-  t.result==="Win"?m[k].w++:m[k].l++
- })
- let h="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>"
- Object.entries(m).forEach(([k,v])=>{
-  const wr=v.w/(v.w+v.l||1)
-  h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
-  <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`
- })
- combo.innerHTML=h+"</table>"
+  const map={};
+  d.forEach(t=>{
+    const k=[t.grade,(t.tags.includes("Sweep")?"Sweep":"No Sweep"),...t.tags.filter(x=>x!=="Sweep")].join(" + ");
+    if(!map[k])map[k]={w:0,l:0};
+    t.result==="Win"?map[k].w++:map[k].l++;
+  });
+  let h="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
+  Object.entries(map).forEach(([k,v])=>{
+    const wr=v.w/(v.w+v.l);
+    h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
+      <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`;
+  });
+  h+="</table>";
+  combo.innerHTML=h;
 }
 
 function renderSessionGrade(d){
- const m={}
- d.forEach(t=>{
-  const k=t.session+"|"+t.grade;if(!m[k])m[k]={w:0,l:0}
-  t.result==="Win"?m[k].w++:m[k].l++
- })
- let s="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>"
- Object.entries(m).forEach(([k,v])=>{
-  const [se,gr]=k.split("|")
-  s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l||1)*100).toFixed(1)}%</td></tr>`
- })
- sessionGrade.innerHTML=s+"</table>"
+  const m={};
+  d.forEach(t=>{
+    const k=t.session+"|"+t.grade;
+    if(!m[k])m[k]={w:0,l:0};
+    t.result==="Win"?m[k].w++:m[k].l++;
+  });
+  let s="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
+  Object.entries(m).forEach(([k,v])=>{
+    const [se,gr]=k.split("|");
+    s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l)*100).toFixed(1)}%</td></tr>`;
+  });
+  s+="</table>";
+  sessionGrade.innerHTML=s;
 }
 
 function renderLosingStreak(d){
- let s=0
- for(let i=d.length-1;i>=0;i--){if(d[i].result==="Loss")s++;else break}
- losingStreak.innerHTML=`<h3>📉 Losing Streak</h3>
- <table><tr><th>วันที่</th><th>แพ้ติด</th></tr>
- <tr><td>${d[d.length-1].date}</td><td>${s}</td></tr></table>`
+  let s=0;
+  for(let i=d.length-1;i>=0;i--){
+    if(d[i].result==="Loss")s++; else break;
+  }
+  losingStreak.innerHTML=`<h3>📉 Losing Streak</h3><p>แพ้ติด ${s} ไม้</p>`;
 }
 
 function renderWeeklyHeatmap(d){
- const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
- let w=Array(7).fill(0).map(()=>({w:0,l:0}))
- d.forEach(t=>{t.result==="Win"?w[t.day].w++:w[t.day].l++})
- let h="<h3>📊 Heatmap วันในสัปดาห์</h3><table><tr><th>วัน</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>"
- w.forEach((x,i)=>{
-  const wr=x.w/(x.w+x.l||1)
-  h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
-  <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`
- })
- weeklyHeatmap.innerHTML=h+"</table>"
+  const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  let w=Array(7).fill(0).map(()=>({w:0,l:0}));
+  d.forEach(t=>t.result==="Win"?w[t.day].w++:w[t.day].l++);
+  let h="<h3>📊 Heatmap วัน</h3><table><tr><th>Day</th><th>W</th><th>L</th><th>WR</th></tr>";
+  w.forEach((x,i)=>{
+    const tot=x.w+x.l;
+    const wr=tot?x.w/tot:0;
+    h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
+      <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`;
+  });
+  h+="</table>";
+  weeklyHeatmap.innerHTML=h;
 }
 
 function renderSweepHeatmap(d){
- let s={w:0,l:0},n={w:0,l:0}
- d.forEach(t=>{
-  if(t.tags.includes("Sweep"))t.result==="Win"?s.w++:s.l++
-  else t.result==="Win"?n.w++:n.l++
- })
- sweepHeatmap.innerHTML=`<h3>📊 Sweep vs No Sweep</h3>
- <table><tr><th>Type</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>
- <tr><td>Sweep</td><td>${s.w}</td><td>${s.l}</td><td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td></tr>
- <tr><td>No Sweep</td><td>${n.w}</td><td>${n.l}</td><td>${(n.w/(n.w+n.l||1)*100).toFixed(1)}%</td></tr>
- </table>`
+  let s={w:0,l:0},n={w:0,l:0};
+  d.forEach(t=>{
+    if(t.tags.includes("Sweep")) t.result==="Win"?s.w++:s.l++;
+    else t.result==="Win"?n.w++:n.l++;
+  });
+  sweepHeatmap.innerHTML=`<h3>📊 Sweep vs No Sweep</h3>
+  <table>
+  <tr><th>Type</th><th>W</th><th>L</th><th>WR</th></tr>
+  <tr><td>Sweep</td><td>${s.w}</td><td>${s.l}</td><td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td></tr>
+  <tr><td>No Sweep</td><td>${n.w}</td><td>${n.l}</td><td>${(n.w/(n.w+n.l||1)*100).toFixed(1)}%</td></tr>
+  </table>`;
 }
 
 function exportCSV(){
- const d=load();if(!d.length){alert("ไม่มีข้อมูล");return}
- let csv="Date,Session,Grade,Result,STO5,STO15,Tags,Note\n"
- d.forEach(t=>{
-  csv+=`${t.date},${t.session},${t.grade},${t.result},${t.sto5},${t.sto15},"${t.tags.join("|")}","${t.note}"\n`
- })
- const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"})
- const a=document.createElement("a")
- a.href=URL.createObjectURL(blob)
- a.download="Backtest_Playbook.csv"
- a.click()
+  const d=load();
+  if(!d.length){alert("ไม่มีข้อมูล");return;}
+  let csv="Date,Session,Grade,Result,Tags,Note\n";
+  d.forEach(t=>{
+    csv+=`${t.date},${t.session},${t.grade},${t.result},"${t.tags.join("|")}","${t.note}"\n`;
+  });
+  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Backtest_Playbook.csv";
+  a.click();
 }
 
 function clearAll(){
- if(confirm("ล้างข้อมูลทั้งหมด?")){
-  localStorage.removeItem(KEY);render()
- }
+  if(confirm("ล้างข้อมูลทั้งหมด?")){
+    localStorage.clear();
+    render();
+  }
 }
 
-render()
+render();
 </script>
 
 </body>
