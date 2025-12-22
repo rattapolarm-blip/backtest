@@ -23,6 +23,10 @@ body{
   font-family:Arial, sans-serif;
   margin:0;
   padding:14px;
+
+  /* 🔽 ลดขนาดรวม 20% (0.8) */
+  transform: scale(0.8);
+  transform-origin: top center;
 }
 
 h2{font-size:26px;margin:10px 0}
@@ -104,12 +108,16 @@ th{background:#222}
   <option>London</option>
   <option>New York</option>
 </select>
+
 <select id="grade">
   <option>A+</option>
   <option>A</option>
   <option>B+</option>
   <option>B</option>
+  <option>C+</option>
+  <option>C</option>
 </select>
+
 <select id="result">
   <option>Win</option>
   <option>Loss</option>
@@ -198,7 +206,7 @@ function renderCombo(d){
   });
   let h="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
   Object.entries(map).forEach(([k,v])=>{
-    const wr=v.w/(v.w+v.l);
+    const wr=v.w/(v.w+v.l||1);
     h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
       <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`;
   });
@@ -216,7 +224,7 @@ function renderSessionGrade(d){
   let s="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
   Object.entries(m).forEach(([k,v])=>{
     const [se,gr]=k.split("|");
-    s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l)*100).toFixed(1)}%</td></tr>`;
+    s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l||1)*100).toFixed(1)}%</td></tr>`;
   });
   s+="</table>";
   sessionGrade.innerHTML=s;
