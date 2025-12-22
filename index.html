@@ -22,16 +22,21 @@ body{
   color:#eee;
   font-family:Arial, sans-serif;
   margin:0;
-  padding:14px;
+  padding:0;
+}
 
-  /* 🔽 ลดขนาดรวม 20% (0.8) */
-  transform: scale(0.8);
+/* 🔽 ตัวนี้คือหัวใจ */
+.wrap{
+  padding:14px;
+  transform: scale(0.8);          /* ลดขนาดรวม */
   transform-origin: top center;
 }
 
+/* ===== TEXT ===== */
 h2{font-size:26px;margin:10px 0}
 h3{font-size:20px;margin:14px 0}
 
+/* ===== CARD ===== */
 .card{
   background:var(--card);
   border:2px solid var(--line);
@@ -40,6 +45,7 @@ h3{font-size:20px;margin:14px 0}
   margin-bottom:18px;
 }
 
+/* ===== INPUT ===== */
 select, textarea, button{
   width:100%;
   margin-top:12px;
@@ -57,6 +63,7 @@ button.main{background:var(--green);color:#000;font-weight:bold;font-size:22px}
 button.warn{background:var(--yellow);color:#000;font-size:20px}
 button.danger{background:var(--red);color:#fff;font-size:20px}
 
+/* ===== CHECKBOX ===== */
 label{
   display:flex;
   align-items:center;
@@ -75,6 +82,7 @@ input[type=checkbox]{
   accent-color:var(--green);
 }
 
+/* ===== TABLE ===== */
 table{
   width:100%;
   border-collapse:collapse;
@@ -91,18 +99,22 @@ th{background:#222}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
 
+/* Desktop */
 @media(min-width:900px){
-  body{max-width:900px;margin:auto}
+  .wrap{max-width:900px;margin:auto}
 }
 </style>
 </head>
 
 <body>
 
+<div class="wrap">
+
 <h2>📘 Backtest Playbook (FULL)</h2>
 
 <div class="card">
 <h3>Session / Grade / Result</h3>
+
 <select id="session">
   <option>Asia</option>
   <option>London</option>
@@ -135,7 +147,7 @@ th{background:#222}
 
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / FOMO / สวนเทรนด์"></textarea>
+<textarea id="note" placeholder="ตามแผน / หลุดเทรนด์ / FOMO / สวนเทรนด์"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
@@ -149,6 +161,8 @@ th{background:#222}
 <div class="card" id="sweepHeatmap"></div>
 
 <button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
+
+</div> <!-- wrap -->
 
 <script>
 const KEY="PLAYBOOK_FULL";
@@ -186,10 +200,8 @@ function render(){
     weeklyHeatmap.innerHTML=sweepHeatmap.innerHTML="";
     return;
   }
-
   const win=d.filter(x=>x.result==="Win").length;
   summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
-
   renderCombo(d);
   renderSessionGrade(d);
   renderLosingStreak(d);
@@ -197,6 +209,7 @@ function render(){
   renderSweepHeatmap(d);
 }
 
+/* ===== SUMMARY ===== */
 function renderCombo(d){
   const map={};
   d.forEach(t=>{
@@ -210,8 +223,7 @@ function renderCombo(d){
     h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
       <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`;
   });
-  h+="</table>";
-  combo.innerHTML=h;
+  combo.innerHTML=h+"</table>";
 }
 
 function renderSessionGrade(d){
@@ -226,8 +238,7 @@ function renderSessionGrade(d){
     const [se,gr]=k.split("|");
     s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l||1)*100).toFixed(1)}%</td></tr>`;
   });
-  s+="</table>";
-  sessionGrade.innerHTML=s;
+  sessionGrade.innerHTML=s+"</table>";
 }
 
 function renderLosingStreak(d){
@@ -249,8 +260,7 @@ function renderWeeklyHeatmap(d){
     h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
       <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`;
   });
-  h+="</table>";
-  weeklyHeatmap.innerHTML=h;
+  weeklyHeatmap.innerHTML=h+"</table>";
 }
 
 function renderSweepHeatmap(d){
