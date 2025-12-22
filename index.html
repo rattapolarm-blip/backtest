@@ -2,99 +2,128 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Backtest Playbook v6.4 FULL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Backtest Playbook FULL (Mobile First)</title>
+
 <style>
-body{background:#0b0b0b;color:#eee;font-family:Arial;padding:14px}
-h2,h3{margin:10px 0}
-.card{background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px}
-select,textarea,button,input{
- width:100%;margin-top:6px;padding:8px;
- background:#0f0f0f;color:#eee;border:1px solid #333;border-radius:6px
+:root{
+  --bg:#0b0b0b;--card:#141414;--line:#2a2a2a;
+  --green:#22c55e;--yellow:#ca8a04;--red:#dc2626;
 }
-label{margin-right:12px;display:inline-block}
-button.main{background:#22c55e;color:#000;font-weight:bold}
-button.warn{background:#ca8a04;color:#000}
-button.danger{background:#dc2626;color:#fff}
-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
+*{box-sizing:border-box}
+body{
+  background:var(--bg);color:#eee;font-family:Arial;
+  margin:0;padding:12px
+}
+h2{margin:6px 0;font-size:20px}
+h3{margin:8px 0;font-size:16px}
+.card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:10px;margin-bottom:10px
+}
+select,textarea,button{
+  width:100%;margin-top:6px;padding:10px;
+  background:#0f0f0f;color:#eee;
+  border:1px solid #333;border-radius:10px;
+  font-size:15px
+}
+textarea{min-height:60px}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.row > *{flex:1 1 48%}
+label{display:inline-flex;align-items:center;
+ margin:6px 10px 0 0;font-size:14px}
+input[type=checkbox]{margin-right:6px;transform:scale(1.2)}
+
+button.main{background:var(--green);color:#000;font-weight:bold}
+button.warn{background:var(--yellow);color:#000}
+button.danger{background:var(--red);color:#fff}
+
+table{width:100%;border-collapse:collapse;margin-top:6px;font-size:12px}
 th,td{border:1px solid #333;padding:6px}
 th{background:#222}
 .ok{background:#1f4f2f}
 .mid{background:#5a4a1d}
 .bad{background:#5b1d1d}
+
+@media(min-width:768px){
+ body{max-width:760px;margin:auto}
+}
 </style>
 </head>
 
 <body>
 
-<h2>📘 Backtest Playbook v6.4 FULL</h2>
+<h2>📘 Backtest Playbook (FULL)</h2>
 
-<!-- INPUT -->
+<!-- SESSION -->
 <div class="card">
 <h3>Session / Grade / Result</h3>
-<select id="session">
-<option>Asia</option><option>London</option><option>New York</option>
-</select>
-<select id="grade">
-<option>A+</option><option>A</option><option>B+</option><option>B</option>
-</select>
-<select id="result">
-<option>Win</option><option>Loss</option>
-</select>
+<div class="row">
+<select id="session"><option>Asia</option><option>London</option><option>New York</option></select>
+<select id="grade"><option>A+</option><option>A</option><option>B+</option><option>B</option></select>
+</div>
+<select id="result"><option>Win</option><option>Loss</option></select>
 </div>
 
+<!-- STO -->
 <div class="card">
-<h3>📊 STO</h3>
-<select id="sto5">
-<option>None</option><option>OVB</option><option>OVS</option>
-</select>
-<select id="sto15">
-<option>None</option><option>OVB</option><option>OVS</option>
-</select>
+<h3>STO</h3>
+<div class="row">
+<select id="sto5"><option>None</option><option>OVB</option><option>OVS</option></select>
+<select id="sto15"><option>None</option><option>OVB</option><option>OVS</option></select>
+</div>
 </div>
 
+<!-- STRUCTURE / ZONE -->
 <div class="card">
 <h3>Structure / Zone</h3>
-<label><input type="checkbox" value="Sweep"> Sweep</label>
-<label><input type="checkbox" value="BOS"> BOS</label>
-<label><input type="checkbox" value="Equal High"> Equal High</label>
-<label><input type="checkbox" value="Equal Low"> Equal Low</label>
-<label><input type="checkbox" value="Asia High"> Asia High</label>
-<label><input type="checkbox" value="Asia Low"> Asia Low</label>
-<label><input type="checkbox" value="Higher High"> Higher High</label>
-<label><input type="checkbox" value="Higher Low"> Higher Low</label>
-<label><input type="checkbox" value="Lower High"> Lower High</label>
-<label><input type="checkbox" value="Lower Low"> Lower Low</label>
+<label><input type="checkbox" value="Sweep">Sweep</label>
+<label><input type="checkbox" value="BOS">BOS</label>
+<label><input type="checkbox" value="Equal High">Equal High</label>
+<label><input type="checkbox" value="Equal Low">Equal Low</label>
+<label><input type="checkbox" value="Asia High">Asia High</label>
+<label><input type="checkbox" value="Asia Low">Asia Low</label>
+<label><input type="checkbox" value="Prev Day High">Prev Day High</label>
+<label><input type="checkbox" value="Prev Day Low">Prev Day Low</label>
+<label><input type="checkbox" value="Higher High">Higher High</label>
+<label><input type="checkbox" value="Higher Low">Higher Low</label>
+<label><input type="checkbox" value="Lower High">Lower High</label>
+<label><input type="checkbox" value="Lower Low">Lower Low</label>
 </div>
 
+<!-- PATTERN -->
 <div class="card">
 <h3>Zone / Pattern</h3>
-<label><input type="checkbox" value="FVG"> FVG</label>
-<label><input type="checkbox" value="Order Block"> Order Block</label>
-<label><input type="checkbox" value="Bullish Engulfing"> Bullish Engulfing</label>
-<label><input type="checkbox" value="Bearish Engulfing"> Bearish Engulfing</label>
-<label><input type="checkbox" value="Trendline"> Trendline</label>
-<label><input type="checkbox" value="Fibonacci"> Fibonacci Zone</label>
+<label><input type="checkbox" value="FVG">FVG</label>
+<label><input type="checkbox" value="Order Block">Order Block</label>
+<label><input type="checkbox" value="Bullish Engulfing">Bullish Engulfing</label>
+<label><input type="checkbox" value="Bearish Engulfing">Bearish Engulfing</label>
+<label><input type="checkbox" value="Trendline">Trendline</label>
+<label><input type="checkbox" value="Fibonacci">Fibonacci Zone</label>
 </div>
 
+<!-- TREND -->
 <div class="card">
 <h3>Trend / Risk</h3>
-<label><input type="checkbox" value="EMA200 M15"> EMA200 เทรน M15</label>
-<label><input type="checkbox" value="EMA200 H1"> EMA200 เทรน H1</label>
-<label><input type="checkbox" value="RR คุ้ม"> RR คุ้ม</label>
-<label><input type="checkbox" value="ใกล้ Supply/EMA"> ใกล้ Supply / EMA ❌</label>
+<label><input type="checkbox" value="EMA200 M15">EMA200 M15</label>
+<label><input type="checkbox" value="EMA200 H1">EMA200 H1</label>
+<label><input type="checkbox" value="RR คุ้ม">RR คุ้ม</label>
+<label><input type="checkbox" value="ใกล้ Supply/EMA">ใกล้ Supply / EMA ❌</label>
 </div>
 
+<!-- MINDSET -->
 <div class="card">
-<h3>🧠 Mindset</h3>
-<label><input type="checkbox" value="ใจนิ่ง"> ใจนิ่ง</label>
-<label><input type="checkbox" value="ทำตามแผน"> ทำตามแผน</label>
-<label><input type="checkbox" value="FOMO"> FOMO ❌</label>
-<label><input type="checkbox" value="Revenge"> Revenge ❌</label>
+<h3>Mindset</h3>
+<label><input type="checkbox" value="ใจนิ่ง">ใจนิ่ง</label>
+<label><input type="checkbox" value="ทำตามแผน">ทำตามแผน</label>
+<label><input type="checkbox" value="FOMO">FOMO ❌</label>
+<label><input type="checkbox" value="Revenge">Revenge ❌</label>
 </div>
 
+<!-- NOTE -->
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
+<textarea id="note" placeholder="ตามแผน / หลุดเทรนด์ / สวน / FOMO"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
@@ -110,21 +139,15 @@ th{background:#222}
 <button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="PLAYBOOK_V64";
+const KEY="PLAYBOOK_FULL_MOBILE";
 
 function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
 function saveTrade(){
- const noteEl=document.getElementById("note");
- if(!noteEl.value.trim()){
-  alert("ต้องใส่หมายเหตุ");
-  return;
- }
-
- const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
-
- const d=load();
+ if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
+ const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
+ const d=load()
  d.push({
   date:new Date().toISOString().slice(0,10),
   day:new Date().getDay(),
@@ -134,132 +157,115 @@ function saveTrade(){
   sto5:sto5.value,
   sto15:sto15.value,
   tags,
-  note:noteEl.value.trim()
- });
-
- save(d);
-
- document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false);
- noteEl.value="";
- render();
+  note:note.value.trim()
+ })
+ save(d)
+ document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
+ note.value=""
+ render()
 }
 
 function comboKey(t){
- let a=[t.grade];
- a.push(t.tags.includes("Sweep")?"Sweep":"No Sweep");
- ["BOS","FVG","Order Block","EMA200 M15","EMA200 H1"].forEach(x=>{
-  if(t.tags.includes(x)) a.push(x);
- });
- return a.join(" + ")+" | "+t.note;
+ let a=[t.grade,(t.tags.includes("Sweep")?"Sweep":"No Sweep")]
+ ;["BOS","FVG","Order Block","EMA200 M15","EMA200 H1"].forEach(x=>{
+  if(t.tags.includes(x))a.push(x)
+ })
+ return a.join(" + ")+" | "+t.note
 }
 
 function render(){
- const d=load();
- if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return;}
-
- const win=d.filter(x=>x.result==="Win").length;
- summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
-
- renderCombo(d);
- renderSessionGrade(d);
- renderLosingStreak(d);
- renderWeeklyHeatmap(d);
- renderSweepHeatmap(d);
+ const d=load()
+ if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return}
+ const win=d.filter(x=>x.result==="Win").length
+ summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`
+ renderCombo(d);renderSessionGrade(d);renderLosingStreak(d)
+ renderWeeklyHeatmap(d);renderSweepHeatmap(d)
 }
 
+/* --- SUMMARY FUNCTIONS (เหมือนเวอร์ชันใหญ่) --- */
 function renderCombo(d){
- const m={};
+ const m={}
  d.forEach(t=>{
-  const k=comboKey(t);
-  if(!m[k])m[k]={w:0,l:0};
-  t.result==="Win"?m[k].w++:m[k].l++;
- });
- let h="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
+  const k=comboKey(t);if(!m[k])m[k]={w:0,l:0}
+  t.result==="Win"?m[k].w++:m[k].l++
+ })
+ let h="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>"
  Object.entries(m).forEach(([k,v])=>{
-  const wr=v.w/(v.w+v.l||1);
+  const wr=v.w/(v.w+v.l||1)
   h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
-  <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`;
- });
- h+="</table>";
- combo.innerHTML=h;
+  <td>${k}</td><td>${(wr*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`
+ })
+ combo.innerHTML=h+"</table>"
 }
 
 function renderSessionGrade(d){
- const m={};
+ const m={}
  d.forEach(t=>{
-  const k=t.session+"|"+t.grade;
-  if(!m[k])m[k]={w:0,l:0};
-  t.result==="Win"?m[k].w++:m[k].l++;
- });
- let s="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>";
+  const k=t.session+"|"+t.grade;if(!m[k])m[k]={w:0,l:0}
+  t.result==="Win"?m[k].w++:m[k].l++
+ })
+ let s="<h3>📌 Session × Grade</h3><table><tr><th>Session</th><th>Grade</th><th>WinRate</th></tr>"
  Object.entries(m).forEach(([k,v])=>{
-  const [se,gr]=k.split("|");
-  s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l||1)*100).toFixed(1)}%</td></tr>`;
- });
- s+="</table>";
- sessionGrade.innerHTML=s;
+  const [se,gr]=k.split("|")
+  s+=`<tr><td>${se}</td><td>${gr}</td><td>${(v.w/(v.w+v.l||1)*100).toFixed(1)}%</td></tr>`
+ })
+ sessionGrade.innerHTML=s+"</table>"
 }
 
 function renderLosingStreak(d){
- let streak=0;
- for(let i=d.length-1;i>=0;i--){
-  if(d[i].result==="Loss") streak++;
-  else break;
- }
+ let s=0
+ for(let i=d.length-1;i>=0;i--){if(d[i].result==="Loss")s++;else break}
  losingStreak.innerHTML=`<h3>📉 Losing Streak</h3>
  <table><tr><th>วันที่</th><th>แพ้ติด</th></tr>
- <tr><td>${d[d.length-1].date}</td><td>${streak}</td></tr></table>`;
+ <tr><td>${d[d.length-1].date}</td><td>${s}</td></tr></table>`
 }
 
 function renderWeeklyHeatmap(d){
- const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
- let w=Array(7).fill(0).map(()=>({w:0,l:0}));
- d.forEach(t=>{t.result==="Win"?w[t.day].w++:w[t.day].l++});
- let h="<h3>📊 Heatmap วันในสัปดาห์</h3><table><tr><th>วัน</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>";
+ const days=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+ let w=Array(7).fill(0).map(()=>({w:0,l:0}))
+ d.forEach(t=>{t.result==="Win"?w[t.day].w++:w[t.day].l++})
+ let h="<h3>📊 Heatmap วันในสัปดาห์</h3><table><tr><th>วัน</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>"
  w.forEach((x,i)=>{
-  const wr=x.w/(x.w+x.l||1);
+  const wr=x.w/(x.w+x.l||1)
   h+=`<tr class="${wr>=0.7?'ok':wr>=0.4?'mid':'bad'}">
-  <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`;
- });
- h+="</table>";
- weeklyHeatmap.innerHTML=h;
+  <td>${days[i]}</td><td>${x.w}</td><td>${x.l}</td><td>${(wr*100).toFixed(1)}%</td></tr>`
+ })
+ weeklyHeatmap.innerHTML=h+"</table>"
 }
 
 function renderSweepHeatmap(d){
- let s={w:0,l:0},n={w:0,l:0};
+ let s={w:0,l:0},n={w:0,l:0}
  d.forEach(t=>{
-  if(t.tags.includes("Sweep")) t.result==="Win"?s.w++:s.l++;
-  else t.result==="Win"?n.w++:n.l++;
- });
+  if(t.tags.includes("Sweep"))t.result==="Win"?s.w++:s.l++
+  else t.result==="Win"?n.w++:n.l++
+ })
  sweepHeatmap.innerHTML=`<h3>📊 Sweep vs No Sweep</h3>
  <table><tr><th>Type</th><th>Win</th><th>Loss</th><th>WinRate</th></tr>
  <tr><td>Sweep</td><td>${s.w}</td><td>${s.l}</td><td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td></tr>
  <tr><td>No Sweep</td><td>${n.w}</td><td>${n.l}</td><td>${(n.w/(n.w+n.l||1)*100).toFixed(1)}%</td></tr>
- </table>`;
+ </table>`
 }
 
 function exportCSV(){
- const d=load();
- if(!d.length){alert("ไม่มีข้อมูล");return;}
- let csv="Date,Session,Grade,Result,STO5,STO15,Tags,Note\n";
+ const d=load();if(!d.length){alert("ไม่มีข้อมูล");return}
+ let csv="Date,Session,Grade,Result,STO5,STO15,Tags,Note\n"
  d.forEach(t=>{
-  csv+=`${t.date},${t.session},${t.grade},${t.result},${t.sto5},${t.sto15},"${t.tags.join("|")}","${t.note}"\n`;
- });
- const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"});
- const a=document.createElement("a");
- a.href=URL.createObjectURL(blob);
- a.download="Backtest_Playbook.csv";
- a.click();
+  csv+=`${t.date},${t.session},${t.grade},${t.result},${t.sto5},${t.sto15},"${t.tags.join("|")}","${t.note}"\n`
+ })
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"})
+ const a=document.createElement("a")
+ a.href=URL.createObjectURL(blob)
+ a.download="Backtest_Playbook.csv"
+ a.click()
 }
 
 function clearAll(){
  if(confirm("ล้างข้อมูลทั้งหมด?")){
-  localStorage.removeItem(KEY);
-  render();
+  localStorage.removeItem(KEY);render()
  }
 }
 
-render();
+render()
 </script>
 
 </body>
