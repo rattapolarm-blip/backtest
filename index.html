@@ -2,54 +2,29 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Backtest Playbook v3 PRO</title>
+<title>Backtest Playbook v4 FULL</title>
 <style>
-body{
-  background:#0f0f0f;
-  color:#eee;
-  font-family:Arial,Helvetica,sans-serif;
-  padding:16px;
-}
-h2,h3{margin:8px 0}
-.card{
-  background:#161616;
-  border:1px solid #2a2a2a;
-  border-radius:8px;
-  padding:12px;
-  margin-bottom:12px;
-}
+body{background:#0b0b0b;color:#eee;font-family:Arial,Helvetica,sans-serif;padding:14px}
+h2,h3{margin:10px 0}
+.card{background:#141414;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:12px}
 select,textarea,button{
-  width:100%;
-  margin-top:6px;
-  padding:8px;
-  background:#111;
-  color:#eee;
-  border:1px solid #333;
-  border-radius:6px;
+  width:100%;margin-top:6px;padding:8px;
+  background:#0f0f0f;color:#eee;border:1px solid #333;border-radius:6px
 }
-button{
-  background:#1fbf75;
-  color:#000;
-  font-weight:bold;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:8px;
-}
-th,td{
-  border:1px solid #333;
-  padding:6px;
-  text-align:left;
-}
+label{margin-right:10px;display:inline-block}
+button.main{background:#22c55e;color:#000;font-weight:bold}
+button.danger{background:#dc2626;color:#fff}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
+th,td{border:1px solid #333;padding:6px;text-align:left}
 th{background:#222}
-.tag{margin-right:8px}
+.warn{color:#ff4d4d;font-weight:bold}
+.ok{color:#22c55e}
 </style>
 </head>
 
 <body>
 
-<h2>📘 Backtest Playbook v3 PRO</h2>
+<h2>📘 Backtest Playbook v4 FULL</h2>
 
 <div class="card">
 <h3>Session / Grade / Result</h3>
@@ -66,29 +41,45 @@ th{background:#222}
 
 <div class="card">
 <h3>Structure / Pattern</h3>
-<label class="tag"><input type="checkbox" value="Sweep"> Sweep</label>
-<label class="tag"><input type="checkbox" value="BOS"> BOS</label>
-<label class="tag"><input type="checkbox" value="FVG"> FVG</label>
-<label class="tag"><input type="checkbox" value="OB"> Order Block</label>
-<label class="tag"><input type="checkbox" value="EMA"> EMA</label>
+<label><input type="checkbox" value="Sweep"> Sweep</label>
+<label><input type="checkbox" value="BOS"> BOS</label>
+<label><input type="checkbox" value="FVG"> FVG</label>
+<label><input type="checkbox" value="OB"> Order Block</label>
+<label><input type="checkbox" value="EMA"> EMA</label>
 </div>
 
 <div class="card">
 <h3>📝 หมายเหตุ (บังคับทุกไม้)</h3>
-<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
+<textarea id="note" placeholder="ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
 </div>
 
-<button onclick="saveTrade()">บันทึกไม้</button>
+<button class="main" onclick="saveTrade()">บันทึกไม้</button>
 
 <div class="card" id="summary"></div>
 <div class="card" id="combo"></div>
+<div class="card" id="lossReason"></div>
+<div class="card" id="heatmap"></div>
+<div class="card" id="alert"></div>
+
+<button class="danger" onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="PLAYBOOK_V3";
+const KEY="PLAYBOOK_V4";
 
+/* ---------- STORAGE ---------- */
 function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
+/* ---------- REASON ---------- */
+function reasonFromNote(note){
+  if(note.includes("FOMO")) return "FOMO";
+  if(note.includes("หลุด")) return "หลุดเทรนด์";
+  if(note.includes("สวน")) return "สวนเทรนด์";
+  if(note.includes("ตาม")) return "ตามแผน";
+  return "อื่นๆ";
+}
+
+/* ---------- COMBO (Sweep first) ---------- */
 function buildCombo(t){
   let tools=[];
   if(t.tags.includes("Sweep")) tools.push("Sweep");
@@ -98,18 +89,15 @@ function buildCombo(t){
   if(t.tags.includes("EMA")) tools.push("EMA");
   if(!t.tags.includes("Sweep")) tools.unshift("No Sweep");
   tools.unshift(t.grade);
-
-  let r="";
-  if(t.note.includes("หลุด")) r="หลุดเทรนด์";
-  else if(t.note.includes("สวน")) r="สวนเทรนด์";
-  else if(t.note.includes("FOMO")) r="FOMO";
-  else if(t.note.includes("ตาม")) r="ตามแผน";
-
-  return r ? tools.join(" + ")+" | "+r : tools.join(" + ");
+  return tools.join(" + ")+" | "+t.reason;
 }
 
+/* ---------- SAVE ---------- */
 function saveTrade(){
-  if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
+  if(!note.value.trim()){
+    alert("ต้องใส่หมายเหตุทุกไม้");
+    return;
+  }
   const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
   const d=load();
   d.push({
@@ -118,7 +106,8 @@ function saveTrade(){
     grade:grade.value,
     result:result.value,
     tags,
-    note:note.value.trim()
+    note:note.value.trim(),
+    reason:reasonFromNote(note.value)
   });
   save(d);
   document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false);
@@ -126,24 +115,30 @@ function saveTrade(){
   render();
 }
 
+/* ---------- RENDER ---------- */
 function render(){
   const d=load();
   if(!d.length){
     summary.innerHTML="ยังไม่มีข้อมูล";
     combo.innerHTML="";
+    lossReason.innerHTML="";
+    heatmap.innerHTML="";
+    alert.innerHTML="";
     return;
   }
+
+  /* SUMMARY */
   const win=d.filter(x=>x.result==="Win").length;
   summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
 
+  /* TOP COMBO */
   const map={};
   d.forEach(t=>{
     const k=buildCombo(t);
     if(!map[k]) map[k]={w:0,l:0};
     t.result==="Win"?map[k].w++:map[k].l++;
   });
-
-  let h="<h3>Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
+  let h="<h3>🔥 Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
   Object.entries(map).sort((a,b)=>{
     return (b[1].w/(b[1].w+b[1].l))-(a[1].w/(a[1].w+a[1].l))
   }).forEach(([k,v])=>{
@@ -152,7 +147,49 @@ function render(){
   });
   h+="</table>";
   combo.innerHTML=h;
+
+  /* LOSS REASON */
+  const lossMap={};
+  d.filter(x=>x.result==="Loss").forEach(t=>{
+    lossMap[t.reason]=(lossMap[t.reason]||0)+1;
+  });
+  let lr="<h3>❌ เหตุแพ้</h3><table><tr><th>เหตุ</th><th>จำนวน</th></tr>";
+  Object.entries(lossMap).forEach(([k,v])=>{
+    lr+=`<tr><td>${k}</td><td>${v}</td></tr>`;
+  });
+  lr+="</table>";
+  lossReason.innerHTML=lr;
+
+  /* HEATMAP */
+  let hm="<h3>📊 Heatmap เหตุแพ้</h3><table><tr><th>เหตุ</th><th>จำนวน</th></tr>";
+  ["FOMO","หลุดเทรนด์","สวนเทรนด์"].forEach(r=>{
+    const c=lossMap[r]||0;
+    hm+=`<tr><td>${r}</td><td class="${c>=3?'warn':'ok'}">${c}</td></tr>`;
+  });
+  hm+="</table>";
+  heatmap.innerHTML=hm;
+
+  /* ALERT 5 LOSS STREAK */
+  let streak=0,last="";
+  for(let i=d.length-1;i>=0;i--){
+    if(d[i].result!=="Loss") break;
+    if(last===""||d[i].reason===last){
+      last=d[i].reason;streak++;
+    }else break;
+  }
+  alert.innerHTML = streak>=5
+    ? `<h3 class="warn">⚠️ เตือน: แพ้ ${streak} ไม้ติด เพราะ ${last}</h3>`
+    : "";
 }
+
+/* ---------- CLEAR ---------- */
+function clearAll(){
+  if(confirm("ล้างข้อมูลทั้งหมด?")){
+    localStorage.removeItem(KEY);
+    render();
+  }
+}
+
 render();
 </script>
 
