@@ -93,4 +93,68 @@ function buildCombo(t){
   let tools=[];
   if(t.tags.includes("Sweep")) tools.push("Sweep");
   if(t.tags.includes("BOS")) tools.push("BOS");
-  if(t.tags.includes("FVG")) tools.push("FVG
+  if(t.tags.includes("FVG")) tools.push("FVG");
+  if(t.tags.includes("OB")) tools.push("OB");
+  if(t.tags.includes("EMA")) tools.push("EMA");
+  if(!t.tags.includes("Sweep")) tools.unshift("No Sweep");
+  tools.unshift(t.grade);
+
+  let r="";
+  if(t.note.includes("หลุด")) r="หลุดเทรนด์";
+  else if(t.note.includes("สวน")) r="สวนเทรนด์";
+  else if(t.note.includes("FOMO")) r="FOMO";
+  else if(t.note.includes("ตาม")) r="ตามแผน";
+
+  return r ? tools.join(" + ")+" | "+r : tools.join(" + ");
+}
+
+function saveTrade(){
+  if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
+  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value);
+  const d=load();
+  d.push({
+    date:new Date().toISOString().slice(0,10),
+    session:session.value,
+    grade:grade.value,
+    result:result.value,
+    tags,
+    note:note.value.trim()
+  });
+  save(d);
+  document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false);
+  note.value="";
+  render();
+}
+
+function render(){
+  const d=load();
+  if(!d.length){
+    summary.innerHTML="ยังไม่มีข้อมูล";
+    combo.innerHTML="";
+    return;
+  }
+  const win=d.filter(x=>x.result==="Win").length;
+  summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`;
+
+  const map={};
+  d.forEach(t=>{
+    const k=buildCombo(t);
+    if(!map[k]) map[k]={w:0,l:0};
+    t.result==="Win"?map[k].w++:map[k].l++;
+  });
+
+  let h="<h3>Top Combo</h3><table><tr><th>Combo</th><th>Win%</th><th>W/L</th></tr>";
+  Object.entries(map).sort((a,b)=>{
+    return (b[1].w/(b[1].w+b[1].l))-(a[1].w/(a[1].w+a[1].l))
+  }).forEach(([k,v])=>{
+    const t=v.w+v.l;
+    h+=`<tr><td>${k}</td><td>${(v.w/t*100).toFixed(1)}%</td><td>${v.w}/${v.l}</td></tr>`;
+  });
+  h+="</table>";
+  combo.innerHTML=h;
+}
+render();
+</script>
+
+</body>
+</html>
