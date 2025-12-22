@@ -1,248 +1,237 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading Journal Dashboard</title>
 
-<title>Backtest Playbook (FULL)</title>
+  <style>
+    /* =====================
+       GLOBAL / RESET
+    ====================== */
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-:root{
-  --bg:#0b0b0b;
-  --card:#141414;
-  --line:#2a2a2a;
-  --green:#22c55e;
-  --yellow:#ca8a04;
-  --red:#dc2626;
-}
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0b0b0b;
+      color: #eaeaea;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
 
-*{box-sizing:border-box}
+    h2 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
 
-body{
-  margin:0;
-  padding:10px;
-  background:var(--bg);
-  color:#eee;
-  font-family:Arial, sans-serif;
-  font-size:15px;
-}
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
 
-/* ---------- CARD ---------- */
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:14px;
-}
+    input, select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px; /* กัน iOS zoom */
+      border-radius: 6px;
+      border: none;
+      background: #1c1c1c;
+      color: #fff;
+    }
 
-/* ---------- HEAD ---------- */
-h2{font-size:22px;margin:6px 0}
-h3{font-size:18px;margin:10px 0}
+    /* =====================
+       LAYOUT
+    ====================== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px;
+      min-height: 100vh;
+    }
 
-/* ---------- INPUT ---------- */
-select,textarea,button{
-  width:100%;
-  margin-top:8px;
-  padding:14px;
-  font-size:16px;
-  background:#0f0f0f;
-  color:#eee;
-  border:1px solid #333;
-  border-radius:10px;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
 
-textarea{min-height:90px}
+    .section {
+      background: #151515;
+      padding: 12px;
+      border-radius: 10px;
+    }
 
-/* ---------- CHECKBOX (Mobile Friendly) ---------- */
-.checkbox-group{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
+    /* =====================
+       CHECKBOX GROUP
+    ====================== */
+    .checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+    }
 
-label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:15px;
-}
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      position: relative;
+      z-index: 10;
+    }
 
-input[type=checkbox]{
-  width:24px;
-  height:24px;
-  accent-color:var(--green);
-}
+    .checkbox-group input {
+      width: auto;
+    }
 
-/* ---------- BUTTON ---------- */
-button.main{
-  background:var(--green);
-  color:#000;
-  font-weight:bold;
-}
-button.warn{background:var(--yellow);color:#000}
-button.danger{background:var(--red);color:#fff}
+    /* =====================
+       ACTION BUTTONS
+    ====================== */
+    .actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-/* ---------- TABLE ---------- */
-.table-wrap{
-  overflow-x:auto;
-}
+    button {
+      flex: 1;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:10px;
-  font-size:14px;
-  min-width:520px;
-}
+    .btn-save {
+      background: #22c55e;
+      color: #000;
+    }
 
-th,td{
-  border:1px solid #333;
-  padding:8px;
-  text-align:left;
-}
+    .btn-export {
+      background: #f59e0b;
+      color: #000;
+    }
 
-th{background:#222}
+    /* =====================
+       MOBILE FIX
+    ====================== */
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
 
-.ok{background:#1f4f2f}
-.mid{background:#5a4a1d}
-.bad{background:#5b1d1d}
+      .checkbox-group {
+        grid-template-columns: 1fr;
+      }
 
-/* ---------- DESKTOP ONLY LAYOUT ---------- */
-@media(min-width:900px){
-  .row{
-    display:flex;
-    gap:12px;
-  }
-  .row>.card{flex:1}
-}
-</style>
+      button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
 
-<h2>📘 Backtest Playbook (FULL)</h2>
+    <!-- STRUCTURE / ZONE -->
+    <div class="grid">
+      <div class="section">
+        <h2>Structure / Zone</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox"> Sweep</label>
+          <label><input type="checkbox"> BOS</label>
+          <label><input type="checkbox"> Equal High</label>
+          <label><input type="checkbox"> Equal Low</label>
+          <label><input type="checkbox"> Asia High</label>
+          <label><input type="checkbox"> Asia Low</label>
+          <label><input type="checkbox"> Higher High</label>
+          <label><input type="checkbox"> Lower Low</label>
+        </div>
+      </div>
 
-<!-- INPUT -->
-<div class="card">
-<h3>Session / Grade / Result</h3>
-<select id="session">
-  <option>Asia</option><option>London</option><option>New York</option>
-</select>
-<select id="grade">
-  <option>A+</option><option>A</option><option>B+</option><option>B</option>
-  <option>C+</option><option>C</option>
-</select>
-<select id="result">
-  <option>Win</option><option>Loss</option>
-</select>
-</div>
+      <!-- ZONE / PATTERN -->
+      <div class="section">
+        <h2>Zone / Pattern</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox"> FVG</label>
+          <label><input type="checkbox"> Order Block</label>
+          <label><input type="checkbox"> Bullish Engulfing</label>
+          <label><input type="checkbox"> Bearish Engulfing</label>
+          <label><input type="checkbox"> Trendline</label>
+          <label><input type="checkbox"> Fibonacci</label>
+        </div>
+      </div>
 
-<div class="card">
-<h3>Structure / Zone</h3>
-<div class="checkbox-group">
-<label><input type="checkbox" value="Sweep">Sweep</label>
-<label><input type="checkbox" value="BOS">BOS</label>
-<label><input type="checkbox" value="Equal High">Equal High</label>
-<label><input type="checkbox" value="Equal Low">Equal Low</label>
-<label><input type="checkbox" value="Asia High">Asia High</label>
-<label><input type="checkbox" value="Asia Low">Asia Low</label>
-<label><input type="checkbox" value="Higher High">Higher High</label>
-<label><input type="checkbox" value="Higher Low">Higher Low</label>
-<label><input type="checkbox" value="Lower High">Lower High</label>
-<label><input type="checkbox" value="Lower Low">Lower Low</label>
-</div>
-</div>
+      <!-- TREND / RISK -->
+      <div class="section">
+        <h2>Trend / Risk</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox"> EMA M15</label>
+          <label><input type="checkbox"> EMA H1</label>
+          <label><input type="checkbox"> RR OK</label>
+        </div>
+      </div>
 
-<div class="card">
-<h3>Zone / Pattern</h3>
-<div class="checkbox-group">
-<label><input type="checkbox" value="FVG">FVG</label>
-<label><input type="checkbox" value="Order Block">Order Block</label>
-<label><input type="checkbox" value="Bullish Engulfing">Bullish Engulfing</label>
-<label><input type="checkbox" value="Bearish Engulfing">Bearish Engulfing</label>
-<label><input type="checkbox" value="Trendline">Trendline</label>
-<label><input type="checkbox" value="Fibonacci">Fibonacci</label>
-</div>
-</div>
+      <!-- MINDSET -->
+      <div class="section">
+        <h2>Mindset</h2>
+        <div class="checkbox-group">
+          <label><input type="checkbox"> Calm</label>
+          <label><input type="checkbox"> Plan</label>
+          <label><input type="checkbox"> FOMO</label>
+          <label><input type="checkbox"> Revenge</label>
+        </div>
+      </div>
 
-<div class="card">
-<h3>Trend / Risk</h3>
-<div class="checkbox-group">
-<label><input type="checkbox" value="EMA M15">EMA M15</label>
-<label><input type="checkbox" value="EMA H1">EMA H1</label>
-<label><input type="checkbox" value="RR OK">RR OK</label>
-<label><input type="checkbox" value="Near Supply">ใกล้ Supply/EMA ❌</label>
-</div>
-</div>
+      <!-- SESSION -->
+      <div class="section">
+        <h2>Session & Grade</h2>
+        <label>Session</label>
+        <select>
+          <option>Asia</option>
+          <option>London</option>
+          <option>New York</option>
+        </select>
 
-<div class="card">
-<h3>Mindset</h3>
-<div class="checkbox-group">
-<label><input type="checkbox" value="Calm">ใจนิ่ง</label>
-<label><input type="checkbox" value="Plan">ทำตามแผน</label>
-<label><input type="checkbox" value="FOMO">FOMO ❌</label>
-<label><input type="checkbox" value="Revenge">Revenge ❌</label>
-</div>
-</div>
+        <label style="margin-top:8px;">Grade</label>
+        <select>
+          <option>A+</option>
+          <option>A</option>
+          <option>B+</option>
+          <option>B</option>
+        </select>
+      </div>
 
-<div class="card">
-<h3>📝 หมายเหตุ (บังคับ)</h3>
-<textarea id="note"></textarea>
-</div>
+      <!-- NOTE -->
+      <div class="section">
+        <h2>Note</h2>
+        <input type="text" placeholder="บันทึกเหตุผล / ความคิด" />
+      </div>
+    </div>
 
-<button class="main" onclick="saveTrade()">บันทึกไม้</button>
+    <!-- ACTIONS -->
+    <div class="actions">
+      <button class="btn-save" onclick="saveData()">บันทึก</button>
+      <button class="btn-export" onclick="exportExcel()">Export Excel</button>
+    </div>
 
-<div class="card" id="summary"></div>
-<div class="card table-wrap" id="sessionGrade"></div>
-<div class="card table-wrap" id="losingStreak"></div>
-<div class="card table-wrap" id="weeklyHeatmap"></div>
-<div class="card table-wrap" id="sweepHeatmap"></div>
-<div class="card table-wrap" id="combo"></div>
+  </div>
 
-<button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
+  <script>
+    function saveData() {
+      alert("บันทึกข้อมูลเรียบร้อย (ตัวอย่าง)");
+    }
 
-<script>
-const KEY="PLAYBOOK_FULL";
-
-function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
-function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
-
-function saveTrade(){
- if(!note.value.trim()){alert("ต้องใส่หมายเหตุ");return}
- const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
- const d=load()
- d.push({
-  date:new Date().toISOString().slice(0,10),
-  day:new Date().getDay(),
-  session:session.value,
-  grade:grade.value,
-  result:result.value,
-  tags,
-  note:note.value
- })
- save(d)
- document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
- note.value=""
- render()
-}
-
-function render(){
- const d=load()
- if(!d.length){summary.innerHTML="ยังไม่มีข้อมูล";return}
- const win=d.filter(x=>x.result==="Win").length
- summary.innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WinRate ${(win/d.length*100).toFixed(1)}%`
-}
-
-function clearAll(){
- if(confirm("ล้างข้อมูลทั้งหมด?")){
-  localStorage.removeItem(KEY)
-  location.reload()
- }
-}
-
-render()
-</script>
-
+    function exportExcel() {
+      alert("Export Excel (ตัวอย่าง)");
+    }
+  </script>
 </body>
 </html>
