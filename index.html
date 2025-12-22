@@ -1,109 +1,96 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <title>Backtest Final Pro Plus v2</title>
-  <style>
-    body{
-      background:#111;
-      color:#eee;
-      font-family: Arial, Helvetica, sans-serif;
-      padding:20px;
-    }
-    table{
-      border-collapse:collapse;
-      width:100%;
-      margin-top:10px;
-    }
-    th,td{
-      border:1px solid #444;
-      padding:6px 8px;
-      text-align:left;
-    }
-    th{ background:#222; }
-  </style>
+<meta charset="UTF-8">
+<title>Backtest Playbook v3 PRO</title>
+<style>
+body{
+  background:#0f0f0f;
+  color:#eee;
+  font-family:Arial,Helvetica,sans-serif;
+  padding:16px;
+}
+h2,h3{margin:8px 0}
+.card{
+  background:#161616;
+  border:1px solid #2a2a2a;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:12px;
+}
+select,textarea,button{
+  width:100%;
+  margin-top:6px;
+  padding:8px;
+  background:#111;
+  color:#eee;
+  border:1px solid #333;
+  border-radius:6px;
+}
+button{
+  background:#1fbf75;
+  color:#000;
+  font-weight:bold;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+}
+th,td{
+  border:1px solid #333;
+  padding:6px;
+  text-align:left;
+}
+th{background:#222}
+.tag{margin-right:8px}
+</style>
 </head>
 
 <body>
 
-<h2>Backtest Final Pro Plus v2</h2>
-<div id="summary"></div>
-<div id="comboSummary" style="margin-top:20px"></div>
+<h2>📘 Backtest Playbook v3 PRO</h2>
+
+<div class="card">
+<h3>Session / Grade / Result</h3>
+<select id="session">
+  <option>Asia</option><option>London</option><option>New York</option>
+</select>
+<select id="grade">
+  <option>A+</option><option>A</option><option>B+</option><option>B</option>
+</select>
+<select id="result">
+  <option>Win</option><option>Loss</option>
+</select>
+</div>
+
+<div class="card">
+<h3>Structure / Pattern</h3>
+<label class="tag"><input type="checkbox" value="Sweep"> Sweep</label>
+<label class="tag"><input type="checkbox" value="BOS"> BOS</label>
+<label class="tag"><input type="checkbox" value="FVG"> FVG</label>
+<label class="tag"><input type="checkbox" value="OB"> Order Block</label>
+<label class="tag"><input type="checkbox" value="EMA"> EMA</label>
+</div>
+
+<div class="card">
+<h3>📝 หมายเหตุ (บังคับทุกไม้)</h3>
+<textarea id="note" placeholder="เช่น ตามแผน / หลุดเทรนด์ / สวนเทรนด์ / FOMO"></textarea>
+</div>
+
+<button onclick="saveTrade()">บันทึกไม้</button>
+
+<div class="card" id="summary"></div>
+<div class="card" id="combo"></div>
 
 <script>
-/* ================= CONFIG ================= */
-const KEY = "FINAL_PRO_PLUS_V2";
+const KEY="PLAYBOOK_V3";
 
-/* ================= STORAGE ================= */
-function load(){ return JSON.parse(localStorage.getItem(KEY) || "[]"); }
-function save(d){ localStorage.setItem(KEY, JSON.stringify(d)); }
+function load(){return JSON.parse(localStorage.getItem(KEY)||"[]")}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 
-/* ================= SCORE ================= */
-function scoreTrade(tags){
-  let s = 0;
-  if(tags.includes("Sweep")) s += 2;
-  if(tags.includes("BOS")) s += 2;
-  if(tags.includes("HL_LH")) s += 1;
-  if(tags.includes("FVG")) s += 1;
-  if(tags.includes("OB")) s += 1;
-  if(tags.includes("EMA_TREND")) s += 1;
-  if(tags.includes("RR_OK")) s += 1;
-  if(tags.includes("CONFIRM")) s += 1;
-  if(tags.includes("CALM")) s += 1;
-
-  if(tags.includes("FOMO")) s -= 2;
-  if(tags.includes("REVENGE")) s -= 2;
-  if(tags.includes("NEAR_EMA")) s -= 1;
-  return s;
-}
-
-/* ================= BUILD COMBO KEY ================= */
-function buildComboKey(trade){
-  const tags = trade.tags || [];
-  let tools = [];
-
-  if(tags.includes("Sweep")) tools.push("Sweep");
-  if(tags.includes("OB")) tools.push("OB");
-  if(tags.includes("BOS")) tools.push("BOS");
-  if(tags.includes("FVG")) tools.push("FVG");
-  if(tags.includes("EMA_TREND")) tools.push("EMA");
-
-  if(!tags.includes("Sweep")) tools.unshift("No Sweep");
-  if(trade.grade) tools.unshift(trade.grade);
-
-  let reason = "";
-  if(trade.note){
-    if(trade.note.includes("หลุด")) reason = "หลุดเทรนด์";
-    else if(trade.note.includes("สวน")) reason = "สวนเทรนด์";
-    else if(trade.note.includes("FOMO")) reason = "FOMO";
-  }
-
-  return reason ? `${tools.join(" + ")} | ${reason}` : tools.join(" + ");
-}
-
-/* ================= RENDER ================= */
-function render(){
-  const d = load();
-  if(!d.length){
-    summary.innerHTML = "ยังไม่มีข้อมูล";
-    comboSummary.innerHTML = "";
-    return;
-  }
-
-  const win = d.filter(x=>x.result==="Win").length;
-  const loss = d.length - win;
-
-  summary.innerHTML = `
-    Win: <b style="color:#4cff4c">${win}</b> |
-    Loss: <b style="color:#ff4c4c">${loss}</b> |
-    WinRate: ${(win/d.length*100).toFixed(1)}%
-  `;
-
-  const map = {};
-  d.forEach(t=>{
-    const k = buildComboKey(t);
-    if(!map[k]) map[k]={w:0,l:0};
-    t.result==="Win" ? map[k].w++ : map[k].l++;
-  });
-
-  let htm
+function buildCombo(t){
+  let tools=[];
+  if(t.tags.includes("Sweep")) tools.push("Sweep");
+  if(t.tags.includes("BOS")) tools.push("BOS");
+  if(t.tags.includes("FVG")) tools.push("FVG
