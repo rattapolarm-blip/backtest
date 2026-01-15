@@ -2,8 +2,8 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Backtest Playbook FULL + STO</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Backtest Playbook FULL</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 
 <style>
 :root{
@@ -13,21 +13,36 @@
 *{box-sizing:border-box}
 body{background:var(--bg);color:#eee;font-family:Arial;margin:0;padding:12px}
 h2{font-size:22px} h3{font-size:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+
+.card{
+ background:var(--card);border:1px solid var(--line);
+ border-radius:16px;padding:14px;margin-bottom:14px
+}
+
 select,textarea,button{
  width:100%;margin-top:8px;padding:14px;font-size:16px;
  background:#0f0f0f;color:#eee;border:1px solid #333;border-radius:10px
 }
 textarea{min-height:80px}
+
 .row{display:flex;align-items:center;gap:12px;margin:10px 0}
+.row label{cursor:pointer}
 input[type=checkbox]{width:26px;height:26px;accent-color:var(--green)}
+
 button.main{background:var(--green);color:#000;font-weight:bold}
 button.warn{background:var(--yellow);color:#000;font-weight:bold}
 button.danger{background:var(--red);color:#fff;font-weight:bold}
+
 table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
 th,td{border:1px solid #333;padding:8px;vertical-align:top}
 th{background:#222}
 .ok{background:#1f4f2f}.mid{background:#5a4a1d}.bad{background:#5b1d1d}
+
+@media(max-width:768px){
+ body{transform:scale(1.12);transform-origin:top center}
+ input[type=checkbox]{width:34px;height:34px}
+ select,textarea,button{font-size:20px;padding:18px}
+}
 </style>
 </head>
 
@@ -35,7 +50,8 @@ th{background:#222}
 
 <h2>📘 Backtest Playbook (FULL)</h2>
 
-<!-- ORIGINAL -->
+<!-- ================== ORIGINAL UI (ไม่แก้ ไม่ตัด) ================== -->
+
 <div class="card">
 <h3>Session / Grade / Result</h3>
 <select id="session"><option>Asia</option><option>London</option><option>New York</option></select>
@@ -43,58 +59,79 @@ th{background:#222}
 <select id="result"><option>Win</option><option>Loss</option></select>
 </div>
 
-<!-- STO ADD -->
 <div class="card">
-<h3>📊 STO รอบที่เล่น (เพิ่ม)</h3>
+<h3>📊 STO (ของเดิม)</h3>
+<select id="sto5"><option>None</option><option>OVB</option><option>OVS</option></select>
+<select id="sto15"><option>None</option><option>OVB</option><option>OVS</option></select>
+</div>
+
+<!-- ================== STO ADD-ON (เพิ่มอย่างเดียว) ================== -->
+
+<div class="card">
+<h3>📊 STO รอบที่เล่น (สำหรับวิเคราะห์)</h3>
+
 <select id="sto_m1"><option value="">M1</option><option>OVB</option><option>OVS</option></select>
 <select id="sto_m5"><option value="">M5</option><option>OVB</option><option>OVS</option></select>
 <select id="sto_m15"><option value="">M15</option><option>OVB</option><option>OVS</option></select>
 <select id="sto_h1"><option value="">H1</option><option>OVB</option><option>OVS</option></select>
 <select id="sto_h4"><option value="">H4</option><option>OVB</option><option>OVS</option></select>
-<select id="sto_d"><option value="">D1</option><option>OVB</option><option>OVS</option></select>
+<select id="sto_d"><option value="">Day</option><option>OVB</option><option>OVS</option></select>
+
 </div>
 
-<!-- ORIGINAL STRUCTURE -->
+<!-- ================== ORIGINAL UI CONTINUE ================== -->
+
 <div class="card">
 <h3>🏗 Structure / Liquidity</h3>
-<div class="row"><input type="checkbox" value="Sweep">Sweep</div>
-<div class="row"><input type="checkbox" value="BOS">BOS</div>
-<div class="row"><input type="checkbox" value="Liquidity">Liquidity</div>
+<div class="row"><input id="sweep" type="checkbox" value="Sweep"><label>Sweep</label></div>
+<div class="row"><input id="bos" type="checkbox" value="BOS"><label>BOS</label></div>
+<div class="row"><input id="liq" type="checkbox" value="Liquidity"><label>Liquidity</label></div>
 </div>
 
 <div class="card">
 <h3>📐 Zone / Pattern</h3>
-<div class="row"><input type="checkbox" value="FVG">FVG</div>
-<div class="row"><input type="checkbox" value="Order Block">Order Block</div>
-<div class="row"><input type="checkbox" value="Bullish Engulfing">Bullish Engulfing</div>
-<div class="row"><input type="checkbox" value="Bearish Engulfing">Bearish Engulfing</div>
+<div class="row"><input id="fvg" type="checkbox" value="FVG"><label>FVG</label></div>
+<div class="row"><input id="ob" type="checkbox" value="Order Block"><label>Order Block</label></div>
+<div class="row"><input id="be" type="checkbox" value="Bullish Engulfing"><label>Bullish Engulfing</label></div>
+<div class="row"><input id="se" type="checkbox" value="Bearish Engulfing"><label>Bearish Engulfing</label></div>
+<div class="row"><input id="pd" type="checkbox" value="Premium Discount"><label>Premium / Discount</label></div>
 </div>
 
 <div class="card">
-<h3>📝 Note (บังคับ)</h3>
+<h3>🧠 Mindset</h3>
+<div class="row"><input type="checkbox" value="Calm">ใจนิ่ง</div>
+<div class="row"><input type="checkbox" value="Plan">ทำตามแผน</div>
+<div class="row"><input type="checkbox" value="FOMO">FOMO</div>
+<div class="row"><input type="checkbox" value="Revenge">Revenge</div>
+</div>
+
+<div class="card">
+<h3>📝 หมายเหตุ (บังคับ)</h3>
 <textarea id="note"></textarea>
 </div>
 
 <button class="main" onclick="saveTrade()">บันทึกไม้</button>
-<button class="warn" onclick="exportCSV()">Export CSV</button>
+<button class="warn" onclick="exportCSV()">📤 Export Excel</button>
 
 <div class="card" id="summary"></div>
 <div class="card" id="stoAnalysis"></div>
 <div class="card" id="tradeTable"></div>
 
-<button class="danger" onclick="clearAll()">ล้างข้อมูลทั้งหมด</button>
+<button class="danger" onclick="clearAll()">🧹 ล้างข้อมูลทั้งหมด</button>
 
 <script>
-const KEY="PLAYBOOK_FULL_STO"
-const $=id=>document.getElementById(id)
-const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]")
-const save=d=>localStorage.setItem(KEY,JSON.stringify(d))
+const KEY="PLAYBOOK_FULL";
+const $=id=>document.getElementById(id);
+const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
+const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
 
 function saveTrade(){
  if(!$("note").value.trim()){alert("ต้องใส่หมายเหตุ");return}
 
  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
- const sto={
+
+ // ➕ STO ADD-ON
+ const stoRound={
   M1:$("sto_m1").value,
   M5:$("sto_m5").value,
   M15:$("sto_m15").value,
@@ -109,14 +146,14 @@ function saveTrade(){
   session:$("session").value,
   grade:$("grade").value,
   result:$("result").value,
-  sto,
   tags,
+  stoRound, // ⭐ เพิ่มเฉย ๆ ไม่กระทบของเดิม
   note:$("note").value
  })
  save(d)
 
- document.querySelectorAll("select").forEach(x=>x.value="")
  document.querySelectorAll("input[type=checkbox]").forEach(x=>x.checked=false)
+ document.querySelectorAll("select[id^='sto_']").forEach(x=>x.value="")
  $("note").value=""
  render()
 }
@@ -124,21 +161,21 @@ function saveTrade(){
 function render(){
  const d=load()
  if(!d.length){$("summary").innerHTML="ยังไม่มีข้อมูล";return}
-
- const w=d.filter(x=>x.result==="Win").length
- $("summary").innerHTML=`🔥 Win ${w} | Loss ${d.length-w} | WR ${(w/d.length*100).toFixed(1)}%`
- renderSTO(d)
+ const win=d.filter(x=>x.result==="Win").length
+ $("summary").innerHTML=`🔥 Win ${win} | Loss ${d.length-win} | WR ${(win/d.length*100).toFixed(1)}%`
+ renderSTOAnalysis(d)
  renderTable(d)
 }
 
-function renderSTO(d){
+function renderSTOAnalysis(d){
  const tf=["M1","M5","M15","H1","H4","D"]
  let h="<h3>📊 วิเคราะห์ STO (แยก)</h3><table><tr><th>TF</th><th>OVB WR</th><th>OVS WR</th></tr>"
  tf.forEach(t=>{
   let o={w:0,l:0},s={w:0,l:0}
   d.forEach(x=>{
-   if(x.sto[t]==="OVB")o[x.result==="Win"?"w":"l"]++
-   if(x.sto[t]==="OVS")s[x.result==="Win"?"w":"l"]++
+   if(!x.stoRound) return
+   if(x.stoRound[t]==="OVB")o[x.result==="Win"?"w":"l"]++
+   if(x.stoRound[t]==="OVS")s[x.result==="Win"?"w":"l"]++
   })
   h+=`<tr>
    <td>${t}</td>
@@ -155,7 +192,7 @@ function renderTable(d){
   h+=`<tr>
    <td>${x.date}</td>
    <td>${x.result}</td>
-   <td>${Object.entries(x.sto).map(([k,v])=>v?`${k}:${v}`:"").join(" ")}</td>
+   <td>${x.stoRound?Object.entries(x.stoRound).map(([k,v])=>v?`${k}:${v}`:"").join(" "):""}</td>
    <td>${x.tags.join(" | ")}</td>
    <td>${x.note}</td>
   </tr>`
@@ -164,24 +201,21 @@ function renderTable(d){
 }
 
 function exportCSV(){
- const d=load(); if(!d.length) return
+ const d=load();if(!d.length)return
  let csv="Date,Session,Grade,Result,STO_M1,STO_M5,STO_M15,STO_H1,STO_H4,STO_D,Tags,Note\n"
  d.forEach(x=>{
+  const s=x.stoRound||{}
   csv+=`${x.date},${x.session},${x.grade},${x.result},`
-  csv+=`${x.sto.M1},${x.sto.M5},${x.sto.M15},${x.sto.H1},${x.sto.H4},${x.sto.D},`
+  csv+=`${s.M1||""},${s.M5||""},${s.M15||""},${s.H1||""},${s.H4||""},${s.D||""},`
   csv+=`"${x.tags.join("|")}","${x.note}"\n`
  })
  const a=document.createElement("a")
  a.href=URL.createObjectURL(new Blob(["\ufeff"+csv],{type:"text/csv"}))
- a.download="Backtest_FULL_STO.csv"
- a.click()
+ a.download="Backtest_STO.csv";a.click()
 }
 
 function clearAll(){
- if(confirm("ล้างข้อมูลทั้งหมด?")){
-  localStorage.clear()
-  render()
- }
+ if(confirm("ล้างข้อมูลทั้งหมด?")){localStorage.clear();render()}
 }
 render()
 </script>
