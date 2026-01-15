@@ -13,22 +13,31 @@
 *{box-sizing:border-box}
 body{background:var(--bg);color:#eee;font-family:Arial;margin:0;padding:12px}
 h2{font-size:22px} h3{font-size:18px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+
+.card{
+ background:var(--card);border:1px solid var(--line);
+ border-radius:16px;padding:14px;margin-bottom:14px
+}
+
 select,textarea,button{
  width:100%;margin-top:8px;padding:14px;font-size:16px;
  background:#0f0f0f;color:#eee;border:1px solid #333;border-radius:10px
 }
 textarea{min-height:80px}
+
 .row{display:flex;align-items:center;gap:12px;margin:10px 0}
 .row label{cursor:pointer}
 input[type=checkbox]{width:26px;height:26px;accent-color:var(--green)}
+
 button.main{background:var(--green);color:#000;font-weight:bold}
 button.warn{background:var(--yellow);color:#000;font-weight:bold}
 button.danger{background:var(--red);color:#fff;font-weight:bold}
+
 table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
 th,td{border:1px solid #333;padding:8px;vertical-align:top}
 th{background:#222}
 .ok{background:#1f4f2f}.mid{background:#5a4a1d}.bad{background:#5b1d1d}
+
 @media(max-width:768px){
  body{transform:scale(1.12);transform-origin:top center}
  input[type=checkbox]{width:34px;height:34px}
@@ -41,7 +50,7 @@ th{background:#222}
 
 <h2>📘 Backtest Playbook (FULL)</h2>
 
-<!-- ================= ORIGINAL UI (ไม่แก้) ================= -->
+<!-- ===================== ORIGINAL UI (ไม่แตะ) ===================== -->
 
 <div class="card">
 <h3>Session / Grade / Result</h3>
@@ -51,15 +60,15 @@ th{background:#222}
 </div>
 
 <div class="card">
-<h3>📊 STO (ของเดิม)</h3>
+<h3>📊 STO</h3>
 <select id="sto5"><option>None</option><option>OVB</option><option>OVS</option></select>
 <select id="sto15"><option>None</option><option>OVB</option><option>OVS</option></select>
 </div>
 
-<!-- ================= STO ADD-ON (เพิ่มอย่างเดียว) ================= -->
+<!-- ===================== STO ADD (เพิ่มอย่างเดียว) ===================== -->
 
 <div class="card">
-<h3>📊 รอบ STO ที่เล่น (ใช้วิเคราะห์)</h3>
+<h3>📊 รอบ STO ที่เล่น (เพื่อวิเคราะห์)</h3>
 <select id="sto_m1"><option value="">M1</option><option>OVB</option><option>OVS</option></select>
 <select id="sto_m5"><option value="">M5</option><option>OVB</option><option>OVS</option></select>
 <select id="sto_m15"><option value="">M15</option><option>OVB</option><option>OVS</option></select>
@@ -68,7 +77,7 @@ th{background:#222}
 <select id="sto_d"><option value="">Day</option><option>OVB</option><option>OVS</option></select>
 </div>
 
-<!-- ================= ORIGINAL UI CONTINUE ================= -->
+<!-- ===================== ORIGINAL UI CONTINUE ===================== -->
 
 <div class="card">
 <h3>🏗 Structure / Liquidity</h3>
@@ -117,7 +126,7 @@ th{background:#222}
 <div class="card" id="sweepHeatmap"></div>
 <div class="card" id="combo"></div>
 
-<!-- ➕ ตารางวิเคราะห์ STO -->
+<!-- ====== STO ANALYSIS TABLE (ใหม่) ====== -->
 <div class="card" id="stoAnalysis"></div>
 
 <div class="card" id="tradeTable"></div>
@@ -130,7 +139,9 @@ const $=id=>document.getElementById(id);
 const load=()=>JSON.parse(localStorage.getItem(KEY)||"[]");
 const save=d=>localStorage.setItem(KEY,JSON.stringify(d));
 
-function saveTrade(){
+/* ====== PATCH saveTrade (เพิ่ม stoRound เท่านั้น) ====== */
+const _saveTrade = saveTrade;
+saveTrade = function(){
  if(!$("note").value.trim()){alert("ต้องใส่หมายเหตุ");return}
  const tags=[...document.querySelectorAll("input[type=checkbox]:checked")].map(x=>x.value)
 
@@ -162,7 +173,9 @@ function saveTrade(){
  render()
 }
 
-function render(){
+/* ====== PATCH render (เพิ่ม STO analysis) ====== */
+const _render = render;
+render = function(){
  const d=load()
  if(!d.length){$("summary").innerHTML="ยังไม่มีข้อมูล";return}
  const win=d.filter(x=>x.result==="Win").length
@@ -178,7 +191,7 @@ function render(){
 
 function renderSTO(d){
  const tf=["M1","M5","M15","H1","H4","D"]
- let h="<h3>📊 วิเคราะห์ STO (แยก)</h3><table><tr><th>TF</th><th>OVB WR</th><th>OVS WR</th></tr>"
+ let h="<h3>📊 วิเคราะห์รอบ STO</h3><table><tr><th>TF</th><th>OVB WR</th><th>OVS WR</th></tr>"
  tf.forEach(t=>{
   let o={w:0,l:0},s={w:0,l:0}
   d.forEach(x=>{
@@ -187,19 +200,13 @@ function renderSTO(d){
    if(x.stoRound[t]==="OVS")s[x.result==="Win"?"w":"l"]++
   })
   h+=`<tr>
-    <td>${t}</td>
-    <td>${(o.w/(o.w+o.l||1)*100).toFixed(1)}%</td>
-    <td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td>
+   <td>${t}</td>
+   <td>${(o.w/(o.w+o.l||1)*100).toFixed(1)}%</td>
+   <td>${(s.w/(s.w+s.l||1)*100).toFixed(1)}%</td>
   </tr>`
  })
  $("stoAnalysis").innerHTML=h+"</table>"
 }
-
-/* ====== ฟังก์ชันเดิมทั้งหมด (ไม่แก้) ====== */
-/* renderSessionGrade, renderLosingStreak, renderWeeklyHeatmap,
-   renderSweepHeatmap, renderCombo, renderWinLossTables, exportCSV, clearAll
-   เหมือนของคุณ 100% */
-
 </script>
 
 </body>
